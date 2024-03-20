@@ -13,7 +13,7 @@
 
 
 <div style="color: white; padding: 9%;">
-  <h2 style="font-size: 50px;color: #93d9ff; margin-bottom: 10%;">KPS</h2>
+  <h2 style="font-size: 50px;color: #93d9ff; margin-bottom: 10%;">Kirkpatrick–Seidel algorithm</h2>
   <p style="font-size: 17px; margin-bottom: 5%;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
   <div>
     <button type="button" id="start-btn" class="btn" style="width: 200px;overflow:hidden; margin-right: 5%;" >To visualize the algorithm</button>
@@ -60,6 +60,9 @@
         console.log('Point added at position x=' + x + ' y=' + y);
     }, { signal });
 
+
+
+
     function drawLine(start, end) {
         let svg = document.getElementById('lineSVG');
         let newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -71,58 +74,238 @@
         newLine.setAttribute('stroke', 'black');
         svg.appendChild(newLine);
         lines.push(newLine);
-        let pointElement = document.createElement('div');
-        pointElement.style.position = 'absolute';
-        pointElement.style.left = `${end.x - 5}px`;
-        pointElement.style.top = `${end.y - 5}px`;
-        pointElement.style.width = '15px';
-        pointElement.style.height = '15px';
-        pointElement.style.borderRadius = '50%';
-        pointElement.style.backgroundColor = 'black';
-        document.getElementById('pointsDiv').appendChild(pointElement);
+        // let pointElement = document.createElement('div');
+        // pointElement.style.position = 'absolute';
+        // pointElement.style.left = `${end.x - 5}px`;
+        // pointElement.style.top = `${end.y - 5}px`;
+        // pointElement.style.width = '15px';
+        // pointElement.style.height = '15px';
+        // pointElement.style.borderRadius = '50%';
+        // pointElement.style.backgroundColor = 'black';
+        // document.getElementById('pointsDiv').appendChild(pointElement);
 
     }
 
 
-let flag = false;
-let xmax = -Infinity;
-  let xmaxpoint;
+// let flag = false;
+function findminmax(){
+  let xmax = -Infinity;
+  let xmin = Infinity;
+  let pumin;
+  let pumax;
+  let plmax;
+  let plmin;
   for (let i = 0; i < points.length; i++) {
     if (points[i].x > xmax) {
-      xmaxpoint = points[i];
+      pumax = points[i];
+      plmax = points[i];
       xmax = points[i].x;
+    }else if(points[i].x==xmax && points[i].y>pumax.y){
+      pumax = points[i];
+      plmax = points[i];
+    }else if(points[i].x==xmax && points[i].y<plmax.y){
+      plmax = points[i];
     }
   }
-
-function findNextPoint() {
-  let startPoint = points[currentPointIndex];
-  let nextPointIndex = -1;
-  let nextPoint = null;
-  let maxAngle = -Infinity;
-
-  for (let i = 0; i < points.length; i++) {
-    if (i !== currentPointIndex && (!hull.includes(i) || i === hull[0])) {
-      let angle = Math.atan2(points[i].y - startPoint.y, points[i].x - startPoint.x);
-      console.log(angle)
-      if (flag) {
-        angle = angle;
-      }
-      if (angle > maxAngle) {
-        maxAngle = angle;
-        nextPointIndex = i;
-        nextPoint = points[i];
-      }
+  for(let i =0;i<points.length;i++){
+    if(points[i].x<xmin){
+      pumin = points[i];
+      plmin = points[i];
+      xmin = points[i].x;
+    }else if(points[i].x==xmin && points[i].y>pumin.y){
+      pumin = points[i];
+      plmin = points[i];
+    }else if(points[i].x==xmin && points[i].y<plmin.y){
+      plmin = points[i];
     }
   }
-  console.log(maxAngle);
-  console.log("\n");
-
-  if (nextPoint === xmaxpoint) {
-    flag = !flag;
-  }
-
-  return { index: nextPointIndex, point: nextPoint, flag: flag };
+return {pumax, pumin, plmax, plmin};
 }
+
+function ConvexHull(points){
+  let {pumax, pumin, plmax, plmin} = findminmax();
+  let UpperPoints = [], LowerPoints = [];
+  UpperPoints.push(pumax);
+  LowerPoints.push(plmax);
+  let upperAngle = Math.atan2(pumax.y-pumin.y, pumax.x - pumin.x);
+  let lowerAngle = Math.atan2(plmax.y-plmin.y, plmax.x -plmin.x);
+  for(let i =0;i<points.length;i++){
+    let UpperTempAngle = Math.atan2(points[i].y-pumin.y, points[i].x - pumin.x);
+    let LowerTempAngle = Math.atan2(points[i].y-plmin.y, points[i].x - plmin.x);
+    if(UpperTempAngle > upperAngle){
+      UpperPoints.push(points[i]);
+    }
+    if(LowerTempAngle <lowerAngle){
+      LowerPoints.push(points[i]);
+    }
+  }
+  points.sort((a,b)=> a.x-b.x);
+  let medianX;
+  if(points.length %2==0){
+    medianX =  (points[points.length/2] + points[points.length/2 -1])/2;
+  }else{
+    let medianX = points[points.length/2];
+  }
+  let Final_convex_hull = [];
+  let [p, q] = upperBridge(UpperPoints, medianX.x);
+  console.log(p + " "+ q);
+  // LowerHull(plmin, plmax, LowerPoints, Final_convex_hull);
+}
+
+function upperBridge(S, a) {
+    let candidates = [];
+    let pairs = [];
+
+    if (S.length === 2) {
+        if (S[0].x < S[1].x) {
+            console.log("a");
+            return [S[0], S[1]];
+        }
+
+        else {
+          console.log("b");
+          console.log(S[1]);
+          console.log(S[0]);
+          return [S[1],S[0]];
+        }
+    }
+        
+    
+    for (let i = 0; i < S.length; i += 2) {
+        if (i + 1 < S.length) {
+            if(S[i].x<S[i + 1].x)
+            pairs.push([S[i], S[i + 1]]);
+            else pairs.push([S[i+1], S[i]]);
+        } else {
+            candidates.push(S[i]);
+        }
+    }
+    let k = []
+    for (let i = 0; i < pairs.length; i++) {
+            let pi = pairs[i][0];
+            let pj = pairs[i][1];
+            
+            if (pi.x === pj.x) {
+                if (pi.y > pj.y) {
+                    candidates.push(pi);
+                } else {
+                    candidates.push(pj);
+                }
+            } else {
+                k= (y[pi] - y[pj]) / (x[pi] - x[pj]);
+            }
+            let t = {slope:k,pi:pi,pj:pj}
+            k.push(t);
+    }
+    k.sort((a, b) => a.slope - b.slope);
+    let K = k[k.length/2];
+    SMALL = []
+    EQUAL = []
+    LARGE = []
+    for(let i=0;i<k.length;i++){
+        if(k[i].slope<K){
+            SMALL.push(k[i]);
+        }
+        else if(k[i].slope>K){
+            LARGE.push(k[i]);
+        }
+        else EQUAL.push(k[i]);
+    }
+    let MAX = 0;
+    let pm;
+    let pk;
+    // S or Candidate doubt?
+    for(let i=0;i<S.length;i++){
+        let t = S[i].y-K*S[i].x;
+        if(t>MAX){
+            t = MAX;
+            pk = S[i];
+            pm = S[i];
+        }
+        else if(t==MAX){
+            pk.x = Math.max(pk.x,S[i].x);
+            pm.x = Math.min(pm.x,S[i].x);
+        }
+    }
+    if(pk.x<=a && pm.x>a){
+      console.log("c");
+      return [pk,pm];
+    }
+    
+    for(let i=0;i<pairs.length;i++){
+        if(pm.x<=a){
+
+            for(let j = 0;j<LARGE.length;j++){
+                candidates.push(LARGE[j].pj);
+            }
+            for(let j = 0;j<EQUAL.length;j++){
+                candidates.push(EQUAL[j].pj);
+            }
+            for(let j = 0;j<SMALL.length;j++){
+                candidates.push(SMALL[j].pj);
+                candidates.push(SMALL[j].pi);
+
+            }
+        }
+        else{
+            for(let j = 0;j<LARGE.length;j++){
+                candidates.push(LARGE[j].pi);
+                candidates.push(SMALL[j].pj);
+            }
+            for(let j = 0;j<EQUAL.length;j++){
+                candidates.push(EQUAL[j].pi);
+            }
+            for(let j = 0;j<SMALL.length;j++){
+                candidates.push(SMALL[j].pi);
+            }
+        }
+            
+    }
+    return upperBridge(candidates,a);
+}
+
+
+// function UpperBridge(){
+//   let a = 10;
+  
+//   if(pumax >a && pumin <a){
+//     return {pumax, pumin};
+//   }
+// }
+
+// UpperHull(pumin, pumax, points);
+
+
+
+// function findNextPoint() {
+//   let startPoint = points[currentPointIndex];
+//   let nextPointIndex = -1;
+//   let nextPoint = null;
+//   let maxAngle = -Infinity;
+
+//   for (let i = 0; i < points.length; i++) {
+//     if (i !== currentPointIndex && (!hull.includes(i) || i === hull[0])) {
+//       let angle = Math.atan2(points[i].y - startPoint.y, points[i].x - startPoint.x);
+//       console.log(angle)
+//       if (flag) {
+//         angle = angle;
+//       }
+//       if (angle > maxAngle) {
+//         maxAngle = angle;
+//         nextPointIndex = i;
+//         nextPoint = points[i];
+//       }
+//     }
+//   }
+//   console.log(maxAngle);
+//   console.log("\n");
+
+//   if (nextPoint === xmaxpoint) {
+//     flag = !flag;
+//   }
+
+//   return { index: nextPointIndex, point: nextPoint, flag: flag };
+// }
 
 
 document.getElementById('clear-btn').addEventListener('click',function(event){
@@ -132,53 +315,48 @@ document.getElementById('clear-btn').addEventListener('click',function(event){
 
 document.getElementById('start-btn').addEventListener('click', function(event) {
     controller.abort();
-    // let text = document.getElementById("demo");
+    ConvexHull(points);
+    // UpperHull(points);
+    // if (count === 0) {
+    //   let xmin = Number.MAX_SAFE_INTEGER;
+    //   let xminpoint;
+      
+    //   for (let i = 0; i < points.length; i++) {
+    //     if (points[i].x < xmin) {
+    //       xminpoint = points[i];
+    //       xmin = points[i].x;
+    //     }
+    //   }
+      
+    //   toggleText(xminpoint);
+    //   hull.push(currentPointIndex);
+    // findminmax();
+    // } else {
+    //     let { index, point } = findNextPoint();
+    //     hull.push(index);
+    //     drawLine(points[currentPointIndex], point);
+    //     currentPointIndex = index;
 
-    if (count === 0) {
-        let xmin = Number.MAX_SAFE_INTEGER;
-        let xminpoint;
+    //     if (index === hull[0]) {
+    //         drawLine(points[index], points[hull[0]]);
+    //         document.getElementById('start-btn').disabled = true;
+    //         return; 
+    //     }
+    // }
 
-        for (let i = 0; i < points.length; i++) {
-            if (points[i].x < xmin) {
-                xminpoint = points[i];
-                xmin = points[i].x;
-            }
-        }
-
-        toggleText(xminpoint);
-        hull.push(currentPointIndex);
-    } else {
-        let { index, point } = findNextPoint();
-        hull.push(index);
-        drawLine(points[currentPointIndex], point);
-        currentPointIndex = index;
-
-        if (index === hull[0]) {
-            drawLine(points[index], points[hull[0]]);
-            // text.textContent = "Convex hull completed!";
-            document.getElementById('start-btn').disabled = true;
-            return; 
-        }
-    }
-
-    count++;
+    // count++;
 });
-
-
-    function toggleText(point) {
-        // let text = document.getElementById("demo");
-        let pointElement = document.createElement('div');
-        pointElement.style.position = 'absolute';
-        pointElement.style.left = `${point.x - 5}px`;
-        pointElement.style.top = `${point.y - 5}px`;
-        pointElement.style.width = '15px';
-        pointElement.style.height = '15px';
-        pointElement.style.borderRadius = '50%';
-        pointElement.style.backgroundColor = 'black';
-        document.getElementById('pointsDiv').appendChild(pointElement);
-        // text.style.display = "flex";
-        // text.textContent = "We mark leftmost point as blue";
-    }
+    // function toggleText(point) {
+    //     let pointElement = document.createElement('div');
+    //     pointElement.style.position = 'absolute';
+    //     pointElement.style.left = `${point.x - 5}px`;
+    //     pointElement.style.top = `${point.y - 5}px`;
+    //     pointElement.style.width = '15px';
+    //     pointElement.style.height = '15px';
+    //     pointElement.style.borderRadius = '50%';
+    //     pointElement.style.backgroundColor = 'black';
+    //     document.getElementById('pointsDiv').appendChild(pointElement);
+    // }
 </script>
 
 </body>
