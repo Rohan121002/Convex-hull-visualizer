@@ -147,8 +147,8 @@ function ConvexHull(points){
     let medianX = points[points.length/2];
   }
   let Final_convex_hull = [];
-  let [p, q] = upperBridge(UpperPoints, medianX.x);
-  console.log(p + " "+ q);
+  let {pk, pm} = upperBridge(UpperPoints, medianX.x);
+  console.log(pk + " "+ pm);
   // LowerHull(plmin, plmax, LowerPoints, Final_convex_hull);
 }
 
@@ -159,14 +159,14 @@ function upperBridge(S, a) {
     if (S.length === 2) {
         if (S[0].x < S[1].x) {
             console.log("a");
-            return [S[0], S[1]];
+            return {pk:S[0], pm:S[1]};
         }
 
         else {
           console.log("b");
           console.log(S[1]);
           console.log(S[0]);
-          return [S[1],S[0]];
+          return {pk:S[1],pm:S[0]};
         }
     }
         
@@ -192,9 +192,10 @@ function upperBridge(S, a) {
                     candidates.push(pj);
                 }
             } else {
-                k= (y[pi] - y[pj]) / (x[pi] - x[pj]);
+                k= (pi.y - pj.y) / (pi.x - pj.x);
             }
-            let t = {slope:k,pi:pi,pj:pj}
+            let t = {slope:k,pi:pi,pj:pj};
+            console.log(t);
             k.push(t);
     }
     k.sort((a, b) => a.slope - b.slope);
@@ -211,25 +212,32 @@ function upperBridge(S, a) {
         }
         else EQUAL.push(k[i]);
     }
-    let MAX = 0;
+    let MAX = -Infinity;
     let pm;
     let pk;
     // S or Candidate doubt?
     for(let i=0;i<S.length;i++){
         let t = S[i].y-K*S[i].x;
+        console.log(t+" ");
         if(t>MAX){
             t = MAX;
             pk = S[i];
             pm = S[i];
         }
         else if(t==MAX){
-            pk.x = Math.max(pk.x,S[i].x);
-            pm.x = Math.min(pm.x,S[i].x);
+          if(pk.x<S[i].x){
+            pk = S[i];
+          }
+          if(pm.x >S[i].x){
+            pm = S[i];
+          }
+          // pm.x = Math.min(pm.x,S[i].x);
+            // pk.x = Math.max(pk.x,S[i].x);
         }
     }
     if(pk.x<=a && pm.x>a){
       console.log("c");
-      return [pk,pm];
+      return {pk,pm};
     }
     
     for(let i=0;i<pairs.length;i++){
