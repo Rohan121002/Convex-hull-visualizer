@@ -40,11 +40,14 @@
     const controller = new AbortController();
     const signal = controller.signal;
 
+
+    let height;
     document.getElementById('pointsDiv').addEventListener('click', function(event) {
         let rect = event.target.getBoundingClientRect();
+        height = rect.height;
         let x = event.clientX;
         let y = event.clientY;
-        points.push({ x: x, y: y });
+        points.push({ x: x, y: height - y});
 
         let pointElement = document.createElement('div');
         pointElement.style.position = 'absolute';
@@ -57,7 +60,7 @@
 
         event.target.appendChild(pointElement);
 
-        console.log('Point added at position x=' + x + ' y=' + y);
+        // console.log('Point added at position x=' + x + ' y=' + y);
     }, { signal });
 
 
@@ -96,6 +99,7 @@ function findminmax(){
   let plmax;
   let plmin;
   for (let i = 0; i < points.length; i++) {
+    console.log('Point added at position x=' + points[i].x + ' y=' + points[i].y);
     if (points[i].x > xmax) {
       pumax = points[i];
       plmax = points[i];
@@ -122,23 +126,37 @@ function findminmax(){
 return {pumax, pumin, plmax, plmin};
 }
 
+function keepUniqueElements(array) {
+    return Array.from(new Set(array));
+}
+
 function ConvexHull(points){
   let {pumax, pumin, plmax, plmin} = findminmax();
   let UpperPoints = [], LowerPoints = [];
+  console.log(pumin + pumax + plmin + plmax);
   UpperPoints.push(pumax);
   LowerPoints.push(plmax);
+  UpperPoints.push(pumin);
+  LowerPoints.push(plmin);
   let upperAngle = Math.atan2(pumax.y-pumin.y, pumax.x - pumin.x);
   let lowerAngle = Math.atan2(plmax.y-plmin.y, plmax.x -plmin.x);
   for(let i =0;i<points.length;i++){
     let UpperTempAngle = Math.atan2(points[i].y-pumin.y, points[i].x - pumin.x);
     let LowerTempAngle = Math.atan2(points[i].y-plmin.y, points[i].x - plmin.x);
-    if(UpperTempAngle > upperAngle){
+    if(UpperTempAngle >= upperAngle){
       UpperPoints.push(points[i]);
     }
-    if(LowerTempAngle <lowerAngle){
+    if(LowerTempAngle < lowerAngle){
       LowerPoints.push(points[i]);
     }
   }
+  
+  UpperPoints = UpperPoints.filter(item => item !== pumin);
+  UpperPoints = UpperPoints.filter(item => item !== pumax);
+  LowerPoints = LowerPoints.filter(item => item !== plmin);
+  LowerPoints = LowerPoints.filter(item => item !== plmax);
+  UpperPoints = keepUniqueElements(UpperPoints);
+  LowerPoints = keepUniqueElements(LowerPoints);
   points.sort((a,b)=> a.x-b.x);
   let medianX = {};
   if (points.length % 2 === 0) {
@@ -149,12 +167,33 @@ function ConvexHull(points){
 }
   let Final_convex_hull = [];
   let {pk, pm} = upperBridge(UpperPoints, medianX.x);
-  console.log("pkpm"+pk + " "+ pm);
+  let pointElement = document.createElement('div');
+  pointElement.style.position = 'absolute';
+  pointElement.style.left = `${pk.x - 5}px`;
+  pointElement.style.top = `${height - pk.y - 5}px`;
+  pointElement.style.width = '15px';
+  pointElement.style.height = '15px';
+  pointElement.style.borderRadius = '50%';
+  pointElement.style.backgroundColor = 'black';
+  document.getElementById('pointsDiv').appendChild(pointElement);
+  let pointElement2 = document.createElement('div');
+  pointElement2.style.position = 'absolute';
+  console.log(height);
+  pointElement2.style.left = `${pm.x - 5}px`;
+  pointElement2.style.top = `${height - pm.y - 5}px`;
+  pointElement2.style.width = '15px';
+  pointElement2.style.height = '15px';
+  pointElement2.style.borderRadius = '50%';
+  pointElement2.style.backgroundColor = 'red';
+  document.getElementById('pointsDiv').appendChild(pointElement2);
+  // console.log("pkpm"+pk + " "+ pm);
 }
 
+
+
 function upperBridge(S, a) {
-    let candidates = [];
     let pairs = [];
+    let candidates = [];
 
     if (S.length === 2) {
         if (S[0].x < S[1].x) {
@@ -180,28 +219,29 @@ function upperBridge(S, a) {
             candidates.push(S[i]);
         }
     }
-    let k = []
+    let k = [];
     for (let i = 0; i < pairs.length; i++) {
             let pi = pairs[i][0];
             let pj = pairs[i][1];
             
             if (pi.x === pj.x) {
+
                 if (pi.y > pj.y) {
                     candidates.push(pi);
                 } else {
                     candidates.push(pj);
                 }
             } else {
-                k= (pi.y - pj.y) / (pi.x - pj.x);
+                let sl= (pi.y - pj.y) / (pi.x - pj.x);
+                let t = {slope:sl,pi:pi,pj:pj};
+                k.push(t);
             }
-            let t = {slope:k,pi:pi,pj:pj};
-            console.log(t);
-            k.push(t);
     }
+    console.log(k);
     k.sort((a, b) => a.slope - b.slope);
-    let K = k[Math.floor(k.length/2)];
-    console.log(K);
-    console.log("jhde");
+    let K = k[Math.floor(k.length/2)].slope;
+    // console.log("asdf"+K+"sfd");
+    // console.log("jhde");
     SMALL = []
     EQUAL = []
     LARGE = []
@@ -219,8 +259,9 @@ function upperBridge(S, a) {
     let pk= {};
     // S or Candidate doubt?
     for(let i=0;i<S.length;i++){
+        // console.log("asdf"+S[i].x+"asdfabc"+K+"sdf");
         let t = S[i].y-K*S[i].x;
-        console.log(t+" ");
+        // console.log(t+" ");
         if(t>MAX){
             MAX=t;
             pk = S[i];
@@ -272,6 +313,13 @@ function upperBridge(S, a) {
         }
             
     }
+    candidates = keepUniqueElements(candidates);
+    console.log("hey");
+    for(let i =0;i<candidates.length;i++){
+      console.log(candidates[i]);
+    }
+    console.log("hello");
+    
     return upperBridge(candidates,a);
 }
 
