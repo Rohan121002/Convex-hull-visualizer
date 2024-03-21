@@ -140,16 +140,16 @@ function ConvexHull(points){
     }
   }
   points.sort((a,b)=> a.x-b.x);
-  let medianX;
-  if(points.length %2==0){
-    medianX =  (points[points.length/2] + points[points.length/2 -1])/2;
-  }else{
-    let medianX = points[points.length/2];
-  }
+  let medianX = {};
+  if (points.length % 2 === 0) {
+    medianX.x = (points[Math.floor(points.length / 2)].x + points[Math.floor(points.length / 2) - 1].x) / 2;
+    medianX.y = (points[Math.floor(points.length / 2)].y + points[Math.floor(points.length / 2) - 1].y) / 2;
+} else {
+    medianX = points[Math.floor(points.length / 2)];
+}
   let Final_convex_hull = [];
   let {pk, pm} = upperBridge(UpperPoints, medianX.x);
-  console.log(pk + " "+ pm);
-  // LowerHull(plmin, plmax, LowerPoints, Final_convex_hull);
+  console.log("pkpm"+pk + " "+ pm);
 }
 
 function upperBridge(S, a) {
@@ -163,9 +163,9 @@ function upperBridge(S, a) {
         }
 
         else {
-          console.log("b");
-          console.log(S[1]);
-          console.log(S[0]);
+          // console.log("b");
+          // console.log(S[1]);
+          // console.log(S[0]);
           return {pk:S[1],pm:S[0]};
         }
     }
@@ -199,7 +199,9 @@ function upperBridge(S, a) {
             k.push(t);
     }
     k.sort((a, b) => a.slope - b.slope);
-    let K = k[k.length/2];
+    let K = k[Math.floor(k.length/2)];
+    console.log(K);
+    console.log("jhde");
     SMALL = []
     EQUAL = []
     LARGE = []
@@ -213,14 +215,14 @@ function upperBridge(S, a) {
         else EQUAL.push(k[i]);
     }
     let MAX = -Infinity;
-    let pm;
-    let pk;
+    let pm = {};
+    let pk= {};
     // S or Candidate doubt?
     for(let i=0;i<S.length;i++){
         let t = S[i].y-K*S[i].x;
         console.log(t+" ");
         if(t>MAX){
-            t = MAX;
+            MAX=t;
             pk = S[i];
             pm = S[i];
         }
@@ -235,6 +237,7 @@ function upperBridge(S, a) {
             // pk.x = Math.max(pk.x,S[i].x);
         }
     }
+    console.log(pk + " "+ pm);
     if(pk.x<=a && pm.x>a){
       console.log("c");
       return {pk,pm};
