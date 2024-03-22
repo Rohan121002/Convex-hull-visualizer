@@ -160,8 +160,8 @@ function ConvexHull(points){
   points.sort((a,b)=> a.x-b.x);
   let medianX = {};
   if (points.length % 2 === 0) {
-    medianX.x = (points[Math.floor(points.length / 2)].x + points[Math.floor(points.length / 2) - 1].x) / 2;
-    medianX.y = (points[Math.floor(points.length / 2)].y + points[Math.floor(points.length / 2) - 1].y) / 2;
+    medianX.x = (points[Math.ceil(points.length / 2)].x) ;
+    medianX.y = (points[Math.ceil(points.length / 2)].y);
 } else {
     medianX = points[Math.floor(points.length / 2)];
 }
