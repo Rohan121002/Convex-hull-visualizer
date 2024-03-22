@@ -41,13 +41,13 @@
     const signal = controller.signal;
 
 
-    let height;
+    // let height;
     document.getElementById('pointsDiv').addEventListener('click', function(event) {
         let rect = event.target.getBoundingClientRect();
         height = rect.height;
         let x = event.clientX;
         let y = event.clientY;
-        points.push({ x: x, y: height - y});
+        points.push({ x: x, y: -y});
 
         let pointElement = document.createElement('div');
         pointElement.style.position = 'absolute';
@@ -67,13 +67,14 @@
 
 
     function drawLine(start, end) {
+        // console.log("inside drawline");
         let svg = document.getElementById('lineSVG');
         let newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         newLine.setAttribute('stroke-width', 3)
         newLine.setAttribute('x1', start.x + 2.5);
-        newLine.setAttribute('y1', start.y + 2.5);
+        newLine.setAttribute('y1', -start.y + 2.5);
         newLine.setAttribute('x2', end.x + 2.5);
-        newLine.setAttribute('y2', end.y + 2.5);
+        newLine.setAttribute('y2', -end.y + 2.5);
         newLine.setAttribute('stroke', 'black');
         svg.appendChild(newLine);
         lines.push(newLine);
@@ -86,7 +87,6 @@
         // pointElement.style.borderRadius = '50%';
         // pointElement.style.backgroundColor = 'black';
         // document.getElementById('pointsDiv').appendChild(pointElement);
-
     }
 
 
@@ -170,7 +170,7 @@ function ConvexHull(points){
   let pointElement = document.createElement('div');
   pointElement.style.position = 'absolute';
   pointElement.style.left = `${pk.x - 5}px`;
-  pointElement.style.top = `${height - pk.y - 5}px`;
+  pointElement.style.top = `${-pk.y - 5}px`;
   pointElement.style.width = '15px';
   pointElement.style.height = '15px';
   pointElement.style.borderRadius = '50%';
@@ -178,20 +178,24 @@ function ConvexHull(points){
   document.getElementById('pointsDiv').appendChild(pointElement);
   let pointElement2 = document.createElement('div');
   pointElement2.style.position = 'absolute';
-  console.log(height);
+  // console.log(height);
   pointElement2.style.left = `${pm.x - 5}px`;
-  pointElement2.style.top = `${height - pm.y - 5}px`;
+  pointElement2.style.top = `${-pm.y - 5}px`;
   pointElement2.style.width = '15px';
   pointElement2.style.height = '15px';
   pointElement2.style.borderRadius = '50%';
   pointElement2.style.backgroundColor = 'red';
   document.getElementById('pointsDiv').appendChild(pointElement2);
-  // console.log("pkpm"+pk + " "+ pm);
 }
 
 
 
-function upperBridge(S, a) {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function upperBridge(S, a) {
+    
     let pairs = [];
     let candidates = [];
 
@@ -234,6 +238,8 @@ function upperBridge(S, a) {
             } else {
                 let sl= (pi.y - pj.y) / (pi.x - pj.x);
                 let t = {slope:sl,pi:pi,pj:pj};
+                // console.log("hey123");
+                drawLine(pi, pj);
                 k.push(t);
             }
     }
@@ -320,6 +326,9 @@ function upperBridge(S, a) {
     }
     console.log("hello");
     
+    
+    // setTimeout(function(){}, 5000);
+    await sleep(5000);
     return upperBridge(candidates,a);
 }
 
