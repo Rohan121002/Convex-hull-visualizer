@@ -108,7 +108,6 @@ require(["geom", "plotter", "giftwrap", "grahamscan"], function (geom, plotter, 
                 this.currentStateIndex -= 1;
                 this.plot();
             },
-
             addPoints: function() {
                 // Add however many points is set by the slider
                 var x, y, that=this, n = 0;

@@ -12,10 +12,11 @@
 
 <div style="color: white; padding: 9%;">
   <h2 style="font-size: 50px;color: #93d9ff; margin-bottom: 10%;">Kirkpatrick–Seidel algorithm</h2>
-  <p style="font-size: 17px; margin-bottom: 5%;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-  <div>
-    <button type="button" id="start-btn" class="btn" style="background-color:#855bff; width:200px;overflow:hidden; margin-right: 5%;" >To visualize the algorithm</button>
-    <button type="button" id="clear-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;" >Clear all points</button>
+  <p style="font-size: 17px; margin-bottom: 5%;">The traditional divide-and-conquer algorithm splits the input points into two equal parts, e.g., by a vertical line, recursively finds convex hulls for the left and right subsets of the input, and then merges the two hulls into one by finding the "bridge edges", bitangents that connect the two hulls from above and below.</p>
+  <div style="display: flex;">
+    <button type="button" id="start-btn" class="btn" style="background-color:#855bff; width:200px;overflow:hidden; margin-right: 4%;" >To visualize the algorithm</button>
+    <button type="button" id="clear-btn" class="btn" style="background-color:#855bff;width: 180px;overflow: hidden;margin-right: 4%;" >Clear all points</button>
+    <button type="button" id="go-jarvis-btn" class="btn" style="background-color:#855bff;width: 180px;overflow: hidden;" >Jarvis March Algorithm</button>
   </div>
   <!-- <p id='demo' style="display: none; justify-content: center; align-items: center;">Hello Javascript</p> -->
 </div>

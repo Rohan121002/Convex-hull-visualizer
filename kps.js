@@ -7,17 +7,13 @@ let lines = [];
 const controller = new AbortController();
 const signal = controller.signal;
 
-
-// let height;
 document.getElementById('pointsDiv').addEventListener('click', function(event) {
     let rect = event.target.getBoundingClientRect();
-    // height = rect.height;
     let x = event.clientX;
     let y = event.clientY;
     points.push({ x: x, y: -y});
     drawPoint(x,y, "blue");
 }, { signal });
-
 
 function drawLine(start, end) {
     let svg = document.getElementById('lineSVG');
@@ -44,7 +40,6 @@ function drawPoint(x, y, color){
     pointElement.style.backgroundColor = `${color}`;
     document.getElementById('pointsDiv').appendChild(pointElement);
 }
-
 
 function findminmax(points){
 let xmax = -Infinity;
@@ -104,30 +99,30 @@ function ConvexHull(points){
     }
     Upper = keepUniqueElements(Upper);
     Lower = keepUniqueElements(Lower);
-    let UpperPoints = [];
-    UpperHull(pumin , pumax,Upper, UpperPoints);
-    for(let i =0;i<UpperPoints.length ;i++){
-        drawPoint(UpperPoints[i].x, -UpperPoints[i].y, "green");
-    }
+    // let UpperPoints = [];
+    // console.log("abc",UpperHull(pumin , pumax,Upper))
+    return UpperHull(pumin , pumax,Upper);
+    // for(let i =0;i<UpperPoints.length ;i++){
+    //     drawPoint(UpperPoints[i].x, -UpperPoints[i].y, "green");
+    // }
 }
 
-
-function UpperHull(pumin, pumax,Upper, UpperPoints){
-    console.log("upperHull input", pumin, pumax, Upper, UpperPoints);
+function UpperHull(pumin, pumax,Upper){
+    // console.log("upperHull input", pumin, pumax, Upper, UpperPoints);
     if(pumin.x === pumax.x && pumin.y===pumax.y){
-        return ;
+        return [pumin];
     }
     let medianX;
     if (points.length % 2 === 0) {
-    medianX = (points[Math.floor(points.length / 2)].x + points[Math.floor(points.length / 2) + 1].x)/2;
+        medianX = (points[Math.floor(points.length / 2)].x + points[Math.floor(points.length / 2) + 1].x)/2;
     } else {
-    medianX = points[Math.floor(points.length / 2)].x;
+        medianX = points[Math.floor(points.length / 2)].x;
     }
-    let temp =upperBridge(Upper, medianX);
+    let temp = upperBridge(Upper, medianX);
     let pk = temp[0], pm = temp[1];
-    console.log(pk, pm);
-    UpperPoints.push(pk);
-    UpperPoints.push(pm);
+    // console.log(pk, pm);
+    // UpperPoints.push(pk);
+    // UpperPoints.push(pm);
     let Left = [];
     let Right = [];
     let leftSlope = Math.atan2(pk.y-pumin.y,pk.x - pumin.x);
@@ -146,10 +141,11 @@ function UpperHull(pumin, pumax,Upper, UpperPoints){
     }
     Left = keepUniqueElements(Left);
     Right = keepUniqueElements(Right);
-    UpperHull(pumin , pk , Left , UpperPoints);
-    UpperHull(pm, pumax, Right, UpperPoints);
+    // console.log("union ans" ,UpperHull(pumin , pk , Left ).concat(UpperHull(pm, pumax, Right)));
+    console.log("uleft",UpperHull(pumin , pk , Left ));
+    console.log("uright",UpperHull(pm, pumax, Right))
+    return UpperHull(pumin , pk , Left ).concat(UpperHull(pm, pumax, Right));
 }
-
 
 function upperBridge(S, a) {
     S.sort((a,b)=> a.x-b.x || a.y - b.y);
@@ -181,6 +177,11 @@ function upperBridge(S, a) {
             candidates.push(S[i]);
         }
     }
+
+    // if(pairs.length === 1){
+    //     console.log(pairs);
+    //     return [pairs[0], pairs[1]];
+    // }
 
     let k = [];
     for (let i = 0; i < pairs.length; i++) {
@@ -223,6 +224,7 @@ function upperBridge(S, a) {
             pm = S[i];
         }
     }
+    
     for (let i = 0; i < S.length; i++) {
         let t = S[i].y - K * S[i].x;
         if (t === MAX) {
@@ -234,7 +236,7 @@ function upperBridge(S, a) {
             }
         }
     }
-    // console.log("peeke", pk, pm);
+
     if (pk.x < a && pm.x >= a) {
         return [ pk, pm ];
     }
@@ -246,6 +248,7 @@ function upperBridge(S, a) {
             }
             for (let j = 0; j < EQUAL.length; j++) {
                 candidates.push(EQUAL[j].pj);
+                // candidates.push(EQUAL[j].pi);
             }
             for (let j = 0; j < SMALL.length; j++) {
                 candidates.push(SMALL[j].pj);
@@ -258,6 +261,7 @@ function upperBridge(S, a) {
             }
             for (let j = 0; j < EQUAL.length; j++) {
                 candidates.push(EQUAL[j].pi);
+                // candidates.push(EQUAL[j].pj);
             }
             for (let j = 0; j < SMALL.length; j++) {
                 candidates.push(SMALL[j].pi);
@@ -270,20 +274,24 @@ function upperBridge(S, a) {
     return upperBridge(candidates, a);
 }
 
-
-
 document.getElementById('clear-btn').addEventListener('click',function(event){
 location.reload();
 });
 
+document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
+    window.location.href = "/convexhullvisualiser-master/convexhull.html"
+});
 
 document.getElementById('start-btn').addEventListener('click', function(event) {
     controller.abort();
     console.log("input", points);
-    let list = document.getElementsByClassName('vertex');
-    console.log("thsi is all points"+list);
+    // let list = document.getElementsByClassName('vertex');
+    // console.log("thsi is all points"+list);
     // let Upper_points = [];
-    ConvexHull(points);
+    let UpperHullPoints = ConvexHull(points);
+    for(let i =0;i<UpperHullPoints.length ;i++){
+        drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green");
+    }
     // upperHull(points, Upper_points);
     // console.log(Upper_points);
 });

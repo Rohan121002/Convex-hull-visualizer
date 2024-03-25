@@ -23,6 +23,7 @@
             </label>
             <button style="color:black; background-color: #705bff; border-color: white;" type="button" class="btn btn-primary" v-on:click="previous" v-bind:disabled=previousDisabled>Previous</button>
             <button style="color:black; background-color: #705bff; border-color: white;" type="button" class="btn btn-primary" v-on:click="next" v-bind:disabled=nextDisabled>Next</button>
+            <button style="color:black; background-color: #705bff; border-color: white;" id="go-kps-btn" type="button" class="btn btn-primary">KPS Algorithm</button>
             <label class="slider" for="hulls-slider">State
             <input type="range" id='hulls-slider' name="hullslider" min="0" v-bind:max="statesMax" v-model="stateIndexString" />
             <span id='state-info-span'>{{points.length}} points, state {{currentStateIndex}} of {{statesMax}}</span>
@@ -39,6 +40,13 @@
 
 
 <script data-main="build/convexhull.js" src="./require.js"></script>
+<script>
+document.getElementById('go-kps-btn').addEventListener('click',function(event){
+    console.log("hey");
+    window.location.href = "../kps.html";
+    
+});
+</script>
 </body>
 
 </html>
