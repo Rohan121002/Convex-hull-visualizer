@@ -11,3 +11,9 @@
     background-color: #0056b3; /* Darker background color on hover */
     border: none; /* Remove border on hover */
 }
+.vertex{
+    position : absolute;
+    width : 15px;
+    height : 15px;
+    border-radius: 50%;
+}
