@@ -38,12 +38,7 @@ function keepUniqueElements(array) {
     
 function drawPoint(x, y, color){
     let pointElement = document.createElement('div');
-    // pointElement.style.position = 'absolute';
-    // pointElement.style.width = '15px';
-    // pointElement.style.height = '15px';
-    // pointElement.style.borderRadius = '50%';
     pointElement.classList.add('vertex');
-    // document.getElementsByClassName('vertex');
     pointElement.style.left = `${x - 5}px`;
     pointElement.style.top = `${y - 5}px`;
     pointElement.style.backgroundColor = `${color}`;
@@ -155,57 +150,6 @@ function UpperHull(pumin, pumax,Upper, UpperPoints){
     UpperHull(pm, pumax, Right, UpperPoints);
 }
 
-
-// function upperHull(S, Upper_points) {
-//     S.sort((a,b)=> a.x-b.x || a.y - b.y);
-//     // console.log("sorted", points);
-//     let {pumax, pumin, plmax, plmin} = findminmax(points);
-//     // S.sort((a, b) => a.x - b.x);
-//     // let min = 0, max = S.length - 1;
-//     if (pumin === pumax) {
-//         Upper_points.push(pumin);
-//         // console.log("Upper hull:", S[min]);
-//         return;
-//     }
-//     connect(pumin, pumax, S,Upper_points);
-// }
-
-// function connect(k, m, S,Upper_points) {
-
-//     let medianX;
-//     if (S.length % 2 === 0) {
-//     medianX = (S[Math.floor(S.length / 2)].x + S[Math.floor(S.length / 2) + 1].x)/2;
-//     } else {
-//     medianX = S[Math.floor(S.length / 2)].x;
-//     }
-//     // let a = S[Math.floor(S.length / 2)].x;
-//     let {pk, pm} = upperBridge(S, medianX);
-//     let Left = [];
-//     let Right = [];
-//     let leftSlope = Math.atan2(pk.y-k.y,pk.x - k.x);
-//     let RightSlope = Math.atan2(pm.y - m.y, pm.x - m.x);
-//     for(let i =0;i<S.length;i++){
-//         if(Math.atan2(S[i].y - k.y,S[i].x - k.x) > leftSlope){
-//             Left.push(S[i]);
-//         }
-//         if(Math.atan2(S[i].y - m.y,S[i].x - m.x) < RightSlope){
-//             if(S[i] != m && S[i] != m){
-//                 Right.push(S[i]);
-//             }
-//         }
-//     }
-//     if (pk === k){
-//         Upper_points.push(pk);
-//     }else{
-//         connect(k, pk, Left,Upper_points);
-//     }
-
-//     if (pm === m){
-//         Upper_points.push(pm);
-//     }else{
-//         connect(pm, m, Right,Upper_points);
-//     }
-// }
 
 function upperBridge(S, a) {
     S.sort((a,b)=> a.x-b.x || a.y - b.y);
@@ -336,6 +280,8 @@ location.reload();
 document.getElementById('start-btn').addEventListener('click', function(event) {
     controller.abort();
     console.log("input", points);
+    let list = document.getElementsByClassName('vertex');
+    console.log("thsi is all points"+list);
     // let Upper_points = [];
     ConvexHull(points);
     // upperHull(points, Upper_points);
