@@ -29,7 +29,14 @@ function drawLine(start, end) {
 }
 
 function keepUniqueElements(array) {
-    return Array.from(new Set(array));
+    const uniquePairs = {};
+    const uniqueArray = array.filter(pair => {
+        const key = JSON.stringify(pair);
+        const isUnique = !uniquePairs[key];
+        uniquePairs[key] = true;
+        return isUnique;
+    });
+    return uniqueArray;
 }
     
 function drawPoint(x, y, color){
@@ -160,6 +167,13 @@ function upperBridge(S, a) {
             return [ S[1], S[0] ];
         }
     }
+    // if(S.length === 3){
+    //     if(S[0].y < S[1].y && S[0].y < S[1].y){
+    //         if(Math.abs((S[0].y - S[1].y)(S[0].x-S[1].x)) < Math.abs((S[0].y - S[2].y)(S[0].x-S[2].x))){
+    //             return [S[0], S[1]];
+    //         }
+    //     }
+    // }
 
     for (let i = 0; i < S.length; i += 2) {
         if (i + 1 < S.length) {
@@ -241,7 +255,7 @@ function upperBridge(S, a) {
         return [ pk, pm ];
     }
 
-    for (let i = 0; i < pairs.length; i++) {
+
         if (pm.x < a) {
             for (let j = 0; j < LARGE.length; j++) {
                 candidates.push(LARGE[j].pj);
@@ -267,7 +281,7 @@ function upperBridge(S, a) {
                 candidates.push(SMALL[j].pi);
             }
         }
-    }
+    
 
     candidates = keepUniqueElements(candidates);
     console.log("ubridge again", candidates, a);
