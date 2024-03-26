@@ -86,30 +86,33 @@ function ConvexHull(points){
     points.sort((a,b)=> a.x-b.x || a.y - b.y);
     console.log("sorted", points);
     let {pumax, pumin, plmax, plmin} = findminmax(points);
+    plmin = {x:plmin.x , y:-plmin.y};
+    plmax = {x:plmax.x , y:-plmax.y};
     let Upper = [];
     let Lower = [];
     Upper.push(pumax);
-    Lower.push({x:plmax.x, y:-plmax.y});
+    Lower.push(plmax);
     Upper.push(pumin);
-    Lower.push({x:plmin.x, y:-plmin.y});
+    Lower.push(plmin);
     let upperAngle = Math.atan2(pumax.y-pumin.y, pumax.x - pumin.x);
-    let lowerAngle = Math.atan2(plmax.y-plmin.y, plmax.x -plmin.x);
+    let lowerAngle = Math.atan2(-plmax.y+plmin.y, plmax.x -plmin.x);
     for(let i =0;i<points.length;i++){
     let UpperTempAngle = Math.atan2(points[i].y-pumin.y, points[i].x - pumin.x);
-    let LowerTempAngle = Math.atan2(points[i].y-plmin.y, points[i].x - plmin.x);
-    if(UpperTempAngle >= upperAngle){
-        Upper.push(points[i]);
-    }
-    if(LowerTempAngle <= lowerAngle){
-        Lower.push({x :points[i].x, y:-points[i].y});
-    }
+    let LowerTempAngle = Math.atan2(points[i].y+plmin.y, points[i].x - plmin.x);
+        if(UpperTempAngle >= upperAngle){
+            Upper.push(points[i]);
+        }
+        if(LowerTempAngle <= lowerAngle){
+            Lower.push({x :points[i].x, y:-points[i].y});
+        }
     }
     Upper = keepUniqueElements(Upper);
     Lower = keepUniqueElements(Lower);
-    // console.log("lower points" , Lower);
-    // let UpperPoints = [];
-    // console.log("abc",UpperHull(pumin , pumax,Upper))
-    return UpperHull(pumin,pumax,Upper);
+    console.log("lower points" , Lower);
+    console.log("Upper Points", Upper);
+    let LowerAns = LowerHull(plmin,plmax,Lower);
+    let UpperAns = UpperHull(pumin,pumax,Upper);
+    return UpperAns.concat(LowerAns);
     // for(let i =0;i<UpperPoints.length ;i++){
     //     drawPoint(UpperPoints[i].x, -UpperPoints[i].y, "green");
     // }
@@ -145,7 +148,6 @@ function UpperHull(pumin, pumax,Upper){
     }
     Left = keepUniqueElements(Left);
     Right = keepUniqueElements(Right);
-    // console.log("union ans" ,UpperHull(pumin , pk , Left ).concat(UpperHull(pm, pumax, Right)));
     console.log("uleft",UpperHull(pumin , pk , Left ));
     console.log("uright",UpperHull(pm, pumax, Right))
     return UpperHull(pumin , pk , Left ).concat(UpperHull(pm, pumax, Right));
@@ -156,18 +158,15 @@ function LowerHull(plmin, plmax,Lower){
         return [plmin];
     }
     let medianX;
-    if (points.length % 2 === 0) {
-        medianX = (points[Math.floor(points.length / 2)].x + points[Math.floor(points.length / 2) + 1].x)/2;
+    if (Lower.length % 2 === 0) {
+        medianX = Lower[Math.ceil(Lower.length / 2)].x;
     } else {
-        medianX = points[Math.floor(points.length / 2)].x;
+        medianX = Lower[Math.floor(Lower.length / 2)].x;
     }
+    console.log("new ubridge");
     let temp = upperBridge(Lower, medianX);
     let pk = temp[0], pm = temp[1];
-    drawPoint(pk.x, -pk.y, "red");
-    drawPoint(pm.x, -pm.y, "red");
-    // console.log(pk, pm);
-    // UpperPoints.push(pk);
-    // UpperPoints.push(pm);
+    console.log("abc",plmin, plmax, pk ,pm);
     let Left = [];
     let Right = [];
     let leftSlope = Math.atan2(pk.y-plmin.y,pk.x - plmin.x);
@@ -184,23 +183,16 @@ function LowerHull(plmin, plmax,Lower){
             }
         }
     }
-    for(let i =0;i<Left.length;i++){
-        drawPoint(Left[i].x, -Left[i].y,"red");
-    }
-    for(let i =0;i<Right.length;i++){
-        drawPoint(Right[i].x, -Right[i].y,"yellow");
-    }
     Left = keepUniqueElements(Left);
     Right = keepUniqueElements(Right);
-    // console.log("union ans" ,UpperHull(pumin , pk , Left ).concat(UpperHull(pm, pumax, Right)));
-    console.log("uleft",UpperHull(plmin , pk , Left ));
-    console.log("uright",UpperHull(pm, plmax, Right))
-    return UpperHull(plmin , pk , Left ).concat(UpperHull(pm, plmax, Right));
+    console.log("Left Lower", Left, plmin, pk);
+    console.log("Right Lower", Right,pm, plmax);
+    return LowerHull(plmin , pk , Left ).concat(LowerHull(pm, plmax, Right));
 }
 
 function upperBridge(S, a) {
     S.sort((a,b)=> a.x-b.x||a.y-b.y);
-    console.log("input to ubrige", S, a);
+    console.log("input to ubrige", S, a, S.length);
     let pairs = [];
     let candidates = [];
 
@@ -309,7 +301,7 @@ function upperBridge(S, a) {
         return [ pk, pm ];
     }
 
-    for (let i = 0; i < pairs.length; i++) {
+    // for (let i = 0; i < pairs.length; i++) {
         if (pm.x < a) {
             for (let j = 0; j < LARGE.length; j++) {
                 candidates.push(LARGE[j].pj);
@@ -333,7 +325,7 @@ function upperBridge(S, a) {
                 candidates.push(SMALL[j].pi);
             }
         }
-    }
+    // }
 
     candidates = keepUniqueElements(candidates);
     console.log("ubridge again", candidates, a);
@@ -351,14 +343,13 @@ document.getElementById('go-jarvis-btn').addEventListener('click',function(event
 document.getElementById('start-btn').addEventListener('click', function(event) {
     controller.abort();
     console.log("input", points);
-    // let list = document.getElementsByClassName('vertex');
-    // console.log("thsi is all points"+list);
-    // let Upper_points = [];
     let UpperHullPoints = ConvexHull(points);
-    console.log("sparsh",UpperHullPoints)
+    console.log("sparsh",UpperHullPoints);
     for(let i =0;i<UpperHullPoints.length ;i++){
-        drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green");
+        if(UpperHullPoints[i].y>0){
+            drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green");
+        }else{
+            drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green");
+        }
     }
-    // upperHull(points, Upper_points);
-    // console.log(Upper_points);
 });
