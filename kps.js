@@ -108,11 +108,11 @@ function ConvexHull(points){
     }
     Upper = keepUniqueElements(Upper);
     Lower = keepUniqueElements(Lower);
-    console.log("lower points" , Lower);
-    console.log("Upper Points", Upper);
-    let LowerAns = LowerHull(plmin,plmax,Lower);
+    console.log("lower points" , Lower,plmin, plmax);
+    console.log("Upper Points", Upper, pumin , pumax);
+    // let LowerAns = LowerHull(plmin,plmax,Lower);
     let UpperAns = UpperHull(pumin,pumax,Upper);
-    return UpperAns.concat(LowerAns);
+    return UpperAns;
     // for(let i =0;i<UpperPoints.length ;i++){
     //     drawPoint(UpperPoints[i].x, -UpperPoints[i].y, "green");
     // }
@@ -203,13 +203,6 @@ function upperBridge(S, a) {
             return [ S[1], S[0] ];
         }
     }
-    // if(S.length === 3){
-    //     if(S[0].y < S[1].y && S[0].y < S[1].y){
-    //         if(Math.abs((S[0].y - S[1].y)(S[0].x-S[1].x)) < Math.abs((S[0].y - S[2].y)(S[0].x-S[2].x))){
-    //             return [S[0], S[1]];
-    //         }
-    //     }
-    // }
 
     for (let i = 0; i < S.length; i += 2) {
         if (i + 1 < S.length) {
@@ -227,11 +220,6 @@ function upperBridge(S, a) {
             candidates.push(S[i]);
         }
     }
-
-    // if(pairs.length === 1){
-    //     console.log(pairs);
-    //     return [pairs[0], pairs[1]];
-    // }
 
     let k = [];
     for (let i = 0; i < pairs.length; i++) {
@@ -251,16 +239,8 @@ function upperBridge(S, a) {
           } else {
               let sl= (pi.y - pj.y) / (pi.x - pj.x);
               let t = {slope:sl,pi:pi,pj:pj};
-              // console.log("hey123");
-            //   drawLine(pi, pj);
               k.push(t);
           }
-        // Draw line between pi and pj
-        // drawLine(pi, pj);
-
-        // let sl = (pi.y - pj.y) / (pi.x - pj.x);
-        // let t = { slope: sl, pi: pi, pj: pj };
-        // k.push(t);
     }
 
     k.sort((a, b) => a.slope - b.slope);
@@ -308,31 +288,30 @@ function upperBridge(S, a) {
         return [ pk, pm ];
     }
 
-    // for (let i = 0; i < pairs.length; i++) {
-        if (pm.x < a) {
-            for (let j = 0; j < LARGE.length; j++) {
-                candidates.push(LARGE[j].pj);
-            }
-            for (let j = 0; j < EQUAL.length; j++) {
-                candidates.push(EQUAL[j].pj);
-            }
-            for (let j = 0; j < SMALL.length; j++) {
-                candidates.push(SMALL[j].pj);
-                candidates.push(SMALL[j].pi);
-            }
-        } else {
-            for (let j = 0; j < LARGE.length; j++) {
-                candidates.push(LARGE[j].pi);
-                candidates.push(LARGE[j].pj);
-            }
-            for (let j = 0; j < EQUAL.length; j++) {
-                candidates.push(EQUAL[j].pi);
-            }
-            for (let j = 0; j < SMALL.length; j++) {
-                candidates.push(SMALL[j].pi);
-            }
+    if (pm.x < a) {
+        for (let j = 0; j < LARGE.length; j++) {
+            candidates.push(LARGE[j].pj);
         }
-    // }
+        for (let j = 0; j < EQUAL.length; j++) {
+            candidates.push(EQUAL[j].pj);
+        }
+        for (let j = 0; j < SMALL.length; j++) {
+            candidates.push(SMALL[j].pj);
+            candidates.push(SMALL[j].pi);
+        }
+    } else {
+        for (let j = 0; j < LARGE.length; j++) {
+            candidates.push(LARGE[j].pi);
+            candidates.push(LARGE[j].pj);
+        }
+        for (let j = 0; j < EQUAL.length; j++) {
+            candidates.push(EQUAL[j].pi);
+        }
+        for (let j = 0; j < SMALL.length; j++) {
+            candidates.push(SMALL[j].pi);
+        }
+    }
+
 
     candidates = keepUniqueElements(candidates);
     console.log("ubridge again", candidates, a);
