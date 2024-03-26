@@ -91,6 +91,11 @@ function ConvexHull(points){
  console.log(pumax, pumin, plmax, plmin);
  plmin = {x:plmin.x , y:-plmin.y};
  plmax = {x:plmax.x , y:-plmax.y};
+ drawLine({x:plmin.x,y:plmin.y},{x:pumin.x,y:-pumin.y});
+ drawLine({x:plmax.x,y:plmax.y},{x:pumax.x,y:-pumax.y});
+
+//  drawLine(plmax,pumax);
+
  let Upper = [];
  let Lower = [];
  Upper.push(pumax);
@@ -465,6 +470,7 @@ fileInput.onchange = e => {
         for(let line of lines) {
             const [x, y] = line.split(' ');
             points.push({x: parseFloat(x), y: parseFloat(y)});
+            drawPoint(x,y, "white","9","0")
         }
         console.log(points);
     };
