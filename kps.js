@@ -13,7 +13,7 @@ let rect_details = [];
 
 document.getElementById('pointsDiv').addEventListener('click', function(event) {
  let rect = event.target.getBoundingClientRect();
- rect_details.push(rect.x, rect.x+rect.width, rect.y, rect.y + rect.height);
+ rect_details.push(rect.x,rect.width, rect.y, rect.height);
  console.log(rect_details);
  let x = event.clientX;
  let y = event.clientY;
@@ -51,7 +51,6 @@ function medianDrawLine(start, end) {
     console.log(medianLines);
 }
 
-
 function drawPoint(x, y, color,radius,dis){
     let pointElement = document.createElement('div');
     pointElement.classList.add('vertex');
@@ -70,7 +69,6 @@ function removeLine(){
     medianLines.pop();
 }
 
-
 function keepUniqueElements(array) {
  const uniquePairs = {};
  const uniqueArray = array.filter(pair => {
@@ -81,8 +79,6 @@ function keepUniqueElements(array) {
  });
  return uniqueArray;
 }
- 
-
 
 function findminmax(points){
 let xmax = -Infinity;
@@ -531,39 +527,7 @@ document.getElementById('go-jarvis-btn').addEventListener('click',function(event
  count++;
 });
 
-
-function loadFile() {
-controller.abort();
-const fileInput = document.createElement('input');
-fileInput.type = 'file';
-fileInput.onchange = e => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function(event) {
-        const lines = event.target.result.split('\n');
-        for(let line of lines) {
-            const [x, y] = line.split(' ');
-            points.push({x: parseFloat(x), y: parseFloat(y)});
-            drawPoint(x,y, "white","9","0")
-        }
-        console.log(points);
-    };
-
-    reader.readAsText(file);
-}
-fileInput.click();
-let UpperHullPoints = ConvexHull(points);
-
- console.log("sparsh",UpperHullPoints);
- for(let i =0;i<UpperHullPoints.length ;i++){
- if(UpperHullPoints[i].y>0){
- drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
- }else{
- drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
- }
- }
-}async function loadFile() {
+async function loadFile() {
     controller.abort();
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -571,13 +535,27 @@ let UpperHullPoints = ConvexHull(points);
         return new Promise((resolve, reject) => {
             const file = e.target.files[0];
             const reader = new FileReader();
-
+            let maxX= -Infinity,maxY=-Infinity;
+            let minX = Infinity,minY = Infinity;
             reader.onload = function(event) {
                 const lines = event.target.result.split('\n');
                 for(let line of lines) {
                     const [x, y] = line.split(' ');
+                    maxX = Math.max(x,maxX);
+                    maxY = Math.max(y,maxY);
+                    minX = Math.min(x,minX);
+                    minY = Math.min(y,minY);
                     points.push({x: parseFloat(x), y: parseFloat(y)});
-                    drawPoint(x,y, "white","9","0")
+                }
+                console.log(rect_details);
+                for(let i=0;i<points.length;i++){
+                    points[i].x= (points[i].x - minX)/(maxX-minX);
+                    points[i].x = points[i].x*600 + 1200;
+                    points[i].y= (points[i].y - minY)/(maxY-minY);
+                    points[i].y = points[i].y*530+ 80;
+                    // points[i].x = points[i].x*rect_details[1] + rect_details[0];
+                    // points[i].y = points[i].y*rect_details[3] + rect_details[2];
+                    drawPoint(points[i].x,points[i].y, "white","9","0")
                 }
                 console.log(points);
                 resolve();
