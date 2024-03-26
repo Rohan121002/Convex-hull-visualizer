@@ -203,6 +203,13 @@ function upperBridge(S, a) {
             return [ S[1], S[0] ];
         }
     }
+    // if(S.length === 3){
+    //     if(S[0].y < S[1].y && S[0].y < S[1].y){
+    //         if(Math.abs((S[0].y - S[1].y)(S[0].x-S[1].x)) < Math.abs((S[0].y - S[2].y)(S[0].x-S[2].x))){
+    //             return [S[0], S[1]];
+    //         }
+    //     }
+    // }
 
     for (let i = 0; i < S.length; i += 2) {
         if (i + 1 < S.length) {
