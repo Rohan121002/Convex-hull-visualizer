@@ -563,7 +563,45 @@ let UpperHullPoints = ConvexHull(points);
  drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
  }
  }
+}async function loadFile() {
+    controller.abort();
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.onchange = e => {
+        return new Promise((resolve, reject) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const lines = event.target.result.split('\n');
+                for(let line of lines) {
+                    const [x, y] = line.split(' ');
+                    points.push({x: parseFloat(x), y: parseFloat(y)});
+                    drawPoint(x,y, "white","9","0")
+                }
+                console.log(points);
+                resolve();
+            };
+
+            reader.onerror = reject;
+
+            reader.readAsText(file);
+        });
+    }
+    fileInput.click();
+    await fileInput.onchange();
+    let UpperHullPoints = ConvexHull(points);
+
+    console.log("sparsh",UpperHullPoints);
+    for(let i =0;i<UpperHullPoints.length ;i++){
+        if(UpperHullPoints[i].y>0){
+            drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
+        }else{
+            drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
+        }
+    }
 }
+
 
 document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
  actions[count].func(...actions[count].params);
