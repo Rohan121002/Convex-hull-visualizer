@@ -12,7 +12,7 @@ document.getElementById('pointsDiv').addEventListener('click', function(event) {
     let x = event.clientX;
     let y = event.clientY;
     points.push({ x: x, y: -y});
-    drawPoint(x,y, "blue");
+    drawPoint(x,y, "white","9","0");
 }, { signal });
 
 function drawLine(start, end) {
@@ -23,7 +23,7 @@ function drawLine(start, end) {
     newLine.setAttribute('y1', -start.y + 2.5);
     newLine.setAttribute('x2', end.x + 2.5);
     newLine.setAttribute('y2', -end.y + 2.5);
-    newLine.setAttribute('stroke', 'black');
+    newLine.setAttribute('stroke', 'green');
     svg.appendChild(newLine);
     lines.push(newLine);
 }
@@ -39,11 +39,13 @@ function keepUniqueElements(array) {
     return uniqueArray;
 }
     
-function drawPoint(x, y, color){
+function drawPoint(x, y, color,radius, dis){
     let pointElement = document.createElement('div');
     pointElement.classList.add('vertex');
-    pointElement.style.left = `${x - 5}px`;
-    pointElement.style.top = `${y - 5}px`;
+    pointElement.style.width = `${radius}px`
+    pointElement.style.height = `${radius}px`
+    pointElement.style.left = `${x-dis}px`;
+    pointElement.style.top = `${y-dis}px`;
     pointElement.style.backgroundColor = `${color}`;
     document.getElementById('pointsDiv').appendChild(pointElement);
 }
@@ -198,9 +200,26 @@ function upperBridge(S, a) {
 
     if (S.length === 2) {
         if (S[0].x < S[1].x) {
+            drawLine(S[0], S[1]);
+            if(S[1].y<0){
+                drawPoint(S[1].x, -S[1].y,"green","15","5");
+                drawPoint(S[0].x, -S[0].y,"green","15","5");
+            }else{
+                drawPoint(S[1].x, S[1].y,"green","15","5");
+                drawPoint(S[0].x, S[0].y,"green","15","5");
+            }
             return [ S[0],  S[1] ];
         } else {
+            drawLine(S[1], S[0]);
+            if(S[1].y<0){
+                drawPoint(S[1].x, -S[1].y,"green","15","5");
+                drawPoint(S[0].x, -S[0].y,"green","15","5");
+            }else{
+                drawPoint(S[1].x, S[1].y,"green","15","5");
+                drawPoint(S[0].x, S[0].y,"green","15","5");
+            }
             return [ S[1], S[0] ];
+
         }
     }
 
@@ -285,6 +304,14 @@ function upperBridge(S, a) {
     }
 
     if (pk.x < a && pm.x >= a) {
+        drawLine(pk,pm);
+        if(pk.y<0){
+            drawPoint(pk.x, -pk.y,"green","15","5");
+            drawPoint(pm.x, -pm.y,"green","15","5");
+        }else{
+            drawPoint(pk.x, pk.y,"green","15","5");
+            drawPoint(pm.x, pm.y,"green","15","5");
+        }
         return [ pk, pm ];
     }
 
@@ -331,11 +358,11 @@ document.getElementById('start-btn').addEventListener('click', function(event) {
     console.log("input", points);
     let UpperHullPoints = ConvexHull(points);
     console.log("sparsh",UpperHullPoints);
-    for(let i =0;i<UpperHullPoints.length ;i++){
-        if(UpperHullPoints[i].y>0){
-            drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green");
-        }else{
-            drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green");
-        }
-    }
+    // for(let i =0;i<UpperHullPoints.length ;i++){
+    //     if(UpperHullPoints[i].y>0){
+    //         drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
+    //     }else{
+    //         drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
+    //     }
+    // }
 });
