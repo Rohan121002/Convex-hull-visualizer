@@ -148,6 +148,11 @@ function ConvexHull(points){
  actions.push({func: drawLine, params: [pumin, pumax]});
  plmin = {x:plmin.x , y:-plmin.y};
  plmax = {x:plmax.x , y:-plmax.y};
+ drawLine({x:plmin.x,y:plmin.y},{x:pumin.x,y:-pumin.y});
+ drawLine({x:plmax.x,y:plmax.y},{x:pumax.x,y:-pumax.y});
+
+//  drawLine(plmax,pumax);
+
  let Upper = [];
  let Lower = [];
  Upper.push(pumax);
@@ -525,4 +530,44 @@ document.getElementById('go-jarvis-btn').addEventListener('click',function(event
  actions[count].func(...actions[count].params);
  count++;
 });
+
+
+function loadFile() {
+controller.abort();
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const lines = event.target.result.split('\n');
+        for(let line of lines) {
+            const [x, y] = line.split(' ');
+            points.push({x: parseFloat(x), y: parseFloat(y)});
+            drawPoint(x,y, "white","9","0")
+        }
+        console.log(points);
+    };
+
+    reader.readAsText(file);
+}
+fileInput.click();
+let UpperHullPoints = ConvexHull(points);
+
+ console.log("sparsh",UpperHullPoints);
+ for(let i =0;i<UpperHullPoints.length ;i++){
+ if(UpperHullPoints[i].y>0){
+ drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
+ }else{
+ drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
+ }
+ }
+}
+
+document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
+ actions[count].func(...actions[count].params);
+ count++;
+});
+
 
