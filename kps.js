@@ -88,6 +88,7 @@ function ConvexHull(points){
  points.sort((a,b)=> a.x-b.x || a.y - b.y);
  console.log("sorted", points);
  let {pumax, pumin, plmax, plmin} = findminmax(points);
+ console.log(pumax, pumin, plmax, plmin);
  plmin = {x:plmin.x , y:-plmin.y};
  plmax = {x:plmax.x , y:-plmax.y};
  let Upper = [];
@@ -450,3 +451,36 @@ document.getElementById('start-btn').addEventListener('click', function(event) {
  }
  }
 });
+
+function loadFile() {
+controller.abort();
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const lines = event.target.result.split('\n');
+        for(let line of lines) {
+            const [x, y] = line.split(' ');
+            points.push({x: parseFloat(x), y: parseFloat(y)});
+        }
+        console.log(points);
+    };
+
+    reader.readAsText(file);
+}
+fileInput.click();
+let UpperHullPoints = ConvexHull(points);
+
+console.log("sparsh",UpperHullPoints);
+for(let i =0;i<UpperHullPoints.length ;i++){
+if(UpperHullPoints[i].y>0){
+drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
+}else{
+drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
+}
+}
+
+}
