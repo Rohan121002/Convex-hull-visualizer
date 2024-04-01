@@ -168,8 +168,6 @@ function removeLowerPoints(Lower, plmin, plmax){
 }
 
 function removePoints(ptsToRemove){
-    // console.log("Problem",ptsToRemove);
-    
     let pts = document.getElementsByClassName('vertex');
     let rem=[];
     for(let i =0;i<pts.length;i++){
@@ -180,7 +178,8 @@ function removePoints(ptsToRemove){
         }
     }
     for(let i =0;i<rem.length;i++){
-        document.getElementById('pointsDiv').removeChild(rem[i]);
+        if(document.getElementById('pointsDiv').contains(rem[i]))
+            document.getElementById('pointsDiv').removeChild(rem[i]);
     }
 }
 
@@ -248,12 +247,12 @@ function ConvexHull(points){
     let L = new Set(Lower);
     let U = new Set(Upper);
     for(let i =0;i<points.length;i++){
-        if(!L.has(points[i]) && !U.has(points[i])){
-            
+        if(!L.has({x:points[i].x, y:-points[i].y}) && !U.has(points[i])){
+            toRemove.push(points[i]);
         }
     }
-
-
+    console.log(toRemove);
+    actions.push({func:removePoints, params:[toRemove]});
 }
 
 
