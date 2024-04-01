@@ -5,6 +5,7 @@ let hull = [];
 let lines = [];
 let actions = [];
 let medianLines = [];
+let toRemove = [];
 
 const controller = new AbortController();
 const signal = controller.signal;
@@ -12,11 +13,11 @@ const signal = controller.signal;
 let rect_details = [];
 
 document.getElementById('pointsDiv').addEventListener('click', function(event) {
- let rect = event.target.getBoundingClientRect();
- rect_details.push(rect.x,rect.width, rect.y, rect.height);
- console.log(rect_details);
- let x = event.clientX;
- let y = event.clientY;
+let rect = event.target.getBoundingClientRect();
+//  rect_details.push(rect.x,rect.width, rect.y, rect.height);
+let x = event.clientX;
+let y = event.clientY;
+console.log(rect, x, y);
  points.push({ x: x, y: -y});
  drawPoint(x,y, "white","9","0");
 }, { signal });
@@ -167,7 +168,8 @@ function removeLowerPoints(Lower, plmin, plmax){
 }
 
 function removePoints(ptsToRemove){
-    console.log("Problem",ptsToRemove);
+    // console.log("Problem",ptsToRemove);
+    
     let pts = document.getElementsByClassName('vertex');
     let rem=[];
     for(let i =0;i<pts.length;i++){
@@ -177,7 +179,6 @@ function removePoints(ptsToRemove){
             }
         }
     }
-    // console.log("removePpoints", rem);
     for(let i =0;i<rem.length;i++){
         document.getElementById('pointsDiv').removeChild(rem[i]);
     }
@@ -351,6 +352,7 @@ function UpperHull(pumin, pumax,Upper){
             ptsToRemove.push(Upper[i]);
         }
     }
+    toRemove = toRemove.concat(ptsToRemove);
     if(ptsToRemove.length != 0){
         actions.push({func:removePoints, params:[ptsToRemove]});
     }
@@ -663,7 +665,7 @@ document.getElementById('start-btn').addEventListener('click', function(event) {
 });
 
 document.getElementById('next').addEventListener('click',function(event){
-    console.log(actions[count]);
+    // console.log(actions[count]);
     actions[count].func(...actions[count].params);
     count++;
 });
@@ -715,15 +717,34 @@ async function loadFile() {
     await fileInput.onchange();
     let UpperHullPoints = ConvexHull(points);
 
-    console.log("sparsh",UpperHullPoints);
-    for(let i =0;i<UpperHullPoints.length ;i++){
-        if(UpperHullPoints[i].y>0){
-            drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
-        }else{
-            drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
-        }
-    }
+    // console.log("sparsh",UpperHullPoints);
+    // for(let i =0;i<UpperHullPoints.length ;i++){
+    //     if(UpperHullPoints[i].y>0){
+    //         drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
+    //     }else{
+    //         drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
+    //     }
+    // }
 }
 
+document.getElementById('final-btn').addEventListener('click',function(event){
+    let UpperHullPoints = ConvexHull(points);
+    for(let i =0;i<actions.length;i++){
+        console.log(actions[i]);
+        actions[i].func(...actions[i].params);
+    }
+});
 
+
+document.getElementById('random-btn').addEventListener('click', async function(event){
+    let num = document.getElementById("numberInput").value;
+    document.getElementById("numberInput").value = "";
+    for(let i =0;i<num;i++){
+        let x = Math.floor((Math.random() * 740) + 860);
+        let y = Math.floor((Math.random() * 630) + 70);
+        points.push({ x: x, y: -y});
+        drawPoint(x,y, "white","9","0");
+    }
+    console.log(points);
+});
 
