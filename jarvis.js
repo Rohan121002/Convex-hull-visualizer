@@ -181,7 +181,8 @@ function removePoints(ptsToRemove){
     }
     console.log("hemlo",rem)
     for(let i =0;i<rem.length;i++){
-        document.getElementById('pointsDiv').removeChild(rem[i]);
+        if(document.getElementById('pointsDiv').contains(rem[i]))
+            document.getElementById('pointsDiv').removeChild(rem[i]);
     }
 }
 
@@ -255,6 +256,29 @@ document.getElementById('skip-3-step-btn').addEventListener('click',function(eve
     actions[count].func(...actions[count].params);
     count++;
     // console.log("outside next");
+});
+document.getElementById('prev-btn').addEventListener('click',function(event){
+    if(count===0){
+        return;
+    }
+    const svg = document.getElementById("lineSVG");
+    while (svg.lastChild) {
+        svg.removeChild(svg.lastChild);
+    }
+
+    document.getElementById("pointsDiv").innerHTML = "";
+
+    let pts = document.getElementsByClassName('vertex');
+    for(let i =0;i<pts.length;i++){
+        document.getElementById('pointsDiv').removeChild(pts[i]);
+    }
+    for(let i =0;i<points.length;i++){
+        drawPoint(points[i].x, -points[i].y, "white","9","0");
+    }
+    count--;
+    for(let i =0;i<count;i++){
+        actions[i].func(...actions[i].params);
+    }
 });
 
 document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
