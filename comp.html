@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convex Hull Algorithms Comparision</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+    }
+    h1, h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+    p {
+        margin-bottom: 15px;
+    }
+    .container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+    .algorithm {
+        flex: 1;
+        margin: 0 10px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .algorithm h2 {
+        margin-bottom: 5px;
+    }
+    .advantages, .disadvantages {
+        margin-bottom: 10px;
+    }
+    .advantages li, .disadvantages li {
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<body>
+    <h1>Convex Hull Algorithms Comparision</h1>
+    <div class="container">
+        <div class="algorithm">
+            <h2>Jarvis March Algorithm</h2>
+            <p><strong>Time Complexity:</strong>  O(n*h)</p>
+            <p><strong>Space Complexity:</strong>  O(h) </p>
+            <div class="advantages">
+                <h3>Advantages:</h3>
+                <ul>
+                    <li>Simple implementation</li>
+                    <li>Works well for small or moderate datasets</li>
+                </ul>
+            </div>
+            <div class="disadvantages">
+                <h3>Disadvantages:</h3>
+                <ul>
+                    <li>Inefficient for large datasets</li>
+                    <li>Sensitive to input ordering</li>
+                </ul>
+            </div>
+        </div>
+        <div class="algorithm">
+            <h2>Kirkpatrick–Seidel Algorithm</h2>
+            <p><strong>Time Complexity:</strong>  O(nlog h)</p>
+            <p><strong>Space Complexity:</strong> Depends on data structures</p>
+            <div class="advantages">
+                <h3>Advantages:</h3>
+                <ul>
+                    <li>Efficient for large datasets</li>
+                    <li>Handles dynamic datasets well</li>
+                </ul>
+            </div>
+            <div class="disadvantages">
+                <h3>Disadvantages:</h3>
+                <ul>
+                    <li>More complex implementation</li>
+                    <li>Requires additional data structures</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <p><strong>Comparison:</strong></p>
+    <ul>
+        <li><strong>Efficiency:</strong> Kirkpatrick–Seidel is more efficient for large datasets.</li>
+        <li><strong>Space Usage:</strong> Jarvis March has a fixed space complexity, while Kirkpatrick–Seidel's space usage depends on data structures.</li>
+        <li><strong>Implementation Complexity:</strong> Jarvis March is simpler to implement, whereas Kirkpatrick–Seidel requires more complexity.</li>
+        <li><strong>Robustness:</strong> Kirkpatrick–Seidel is more robust for large or dynamic datasets.</li>
+    </ul>
+</body>
+</html>

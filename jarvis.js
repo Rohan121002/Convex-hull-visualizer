@@ -168,8 +168,6 @@ function removeLowerPoints(Lower, plmin, plmax){
 }
 
 function removePoints(ptsToRemove){
-    // console.log("Problem",ptsToRemove);
-    
     let pts = document.getElementsByClassName('vertex');
     let rem=[];
     for(let i =0;i<pts.length;i++){

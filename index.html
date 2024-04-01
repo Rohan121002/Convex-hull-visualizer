@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAA Assignment</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #bfe7ff;
+    }
+    .container {
+        max-width: 1000px;
+        margin: 100px auto;
+        background-color: black;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .button-container button {
+        padding: 12px 24px;
+        font-size: 16px;
+        background-color: #855bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .button-container button:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select one of the options</h1>
+        <div class="button-container">
+            <button onclick="window.location.href = 'jarAnalysis.html';">Jarvis March Analysis</button>
+            <button onclick="window.location.href = 'kpsAnalysis.html';">Kirkpatrick–Seidel Analysis</button>
+            <button onclick="window.location.href = 'comp.html';">Comparison</button>
+            <button onclick="window.location.href = 'jarvis.html';">Jarvis March Visualization</button>
+            <button onclick="window.location.href = 'kps.html';">Kirkpatrick–Seidel Visualization</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarvis March Algorithm Analysis</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+        background-color: #f8f9fa;
+    }
+    h1, h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+    p {
+        margin-bottom: 15px;
+    }
+    .overview {
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .algorithm-steps {
+        margin-bottom: 20px;
+    }
+    .algorithm-steps ol {
+        margin-left: 20px;
+    }
+    .algorithm-steps li {
+        margin-bottom: 10px;
+    }
+    .considerations {
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .considerations ul {
+        list-style-type: disc;
+        margin-left: 20px;
+    }
+    .considerations li {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+    <h1>Jarvis March Algorithm Analysis</h1>
+    <div class="overview">
+        <h2>Overview:</h2>
+        <p>The Jarvis March algorithm, also known as the Gift Wrapping algorithm, is used to compute the convex hull of a set of points in the plane. It iteratively selects points that form the convex hull by wrapping a "gift" around the points.</p>
+        <h2>Algorithm Steps:</h2>
+        <div class="algorithm-steps">
+            <ol>
+                <li>Select the point with the lowest y-coordinate (and the leftmost if there are ties) as the starting point.</li>
+                <li>Initialize an empty list to store the convex hull points.</li>
+                <li>Repeat the following until the current point is the starting point again:
+                    <ol>
+                        <li>Initialize a variable to store the next point on the hull as the point with the smallest polar angle from the current point.</li>
+                        <li>Add the next point to the convex hull list.</li>
+                        <li>Update the current point to be the next point.</li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="considerations">
+        <h2>Implementation Considerations:</h2>
+        <p>When implementing the Jarvis March algorithm, several considerations should be kept in mind:</p>
+        <ul>
+            <li><strong>Input Order:</strong> The order in which points are processed can affect the algorithm's performance. Sorting the points by their polar angles from the current point can improve efficiency.</li>
+            <li><strong>Collinear Points:</strong> Collinear points can lead to incorrect results. Handling collinear points by removing duplicates or using epsilon values for comparisons is necessary.</li>
+            <li><strong>Efficiency:</strong> While the algorithm is simple, its worst-case time complexity can be \( O(n^2) \) for \( n \) input points. Implementing optimizations like Graham's scan can improve efficiency.</li>
+            <li><strong>Convex Hull Orientation:</strong> Ensure that the convex hull points are returned in counterclockwise order or clockwise order, depending on the application's requirements.</li>
+        </ul>
+    </div>
+</body>
+</html>
