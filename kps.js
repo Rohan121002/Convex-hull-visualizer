@@ -194,7 +194,7 @@ function ConvexHull(points){
     points.sort((a,b)=> a.x-b.x || a.y - b.y);
     console.log("sorted", points);
     let {pumax, pumin, plmax, plmin} = findminmax(points);
-    actions.push({func: drawLine, params: [pumin, pumax, "red","purple"]});
+    actions.push({func: drawLine, params: [pumin, pumax, "red","green"]});
     plmin = {x:plmin.x , y:-plmin.y};
     plmax = {x:plmax.x , y:-plmax.y};
     let Upper = [];
@@ -230,24 +230,6 @@ function ConvexHull(points){
         actions.push({func:getLowerAgain , params:[Lower]});
     }
     let LowerAns = LowerHull(plmin,plmax,Lower);
-    // if(plmin.x===pumin.x && plmin.y===pumin.y){
-
-    // }
-    // else if((plmin.x===pumin.x)){
-    //     pumin = {x:pumin.x , y:-pumin.y};
-    //     console.log(plmin, pumin);
-    //     console.log("12e31231098");
-    //     actions.push({func:drawLine, params:[pumin , plmin,"green","purple"]});
-    // }
-    // if(plmax.x===pumax.x && plmax.y===pumax.y){
-
-    // }
-    // else if((plmax.x===pumax.x)){
-    //     pumax = {x:pumax.x , y:-pumax.y};
-    //     console.log(plmax, pumax);
-    //     console.log("12e31231098");
-    //     actions.push({func:drawLine, params:[pumax , plmax, "green","purple"]});
-    // }
     if(plmax.y>0){
         plmax = {x:plmax.x , y:-plmax.y};
     }
@@ -260,8 +242,18 @@ function ConvexHull(points){
     if(pumin.y>0){
         pumin = {x:pumin.x , y:-pumin.y};
     }   
-    actions.push({func:drawLine, params:[pumax , plmax, "green","gray"]});
-    actions.push({func:drawLine, params:[plmin , pumin, "green","gray"]});
+    actions.push({func:drawLine, params:[pumax , plmax, "green","green"]});
+    actions.push({func:drawLine, params:[plmin , pumin, "green","green"]});
+    let toRemove = [];
+    let L = new Set(Lower);
+    let U = new Set(Upper);
+    for(let i =0;i<points.length;i++){
+        if(!L.has(points[i]) && !U.has(points[i])){
+            
+        }
+    }
+
+
 }
 
 
@@ -299,7 +291,7 @@ function UpperHull(pumin, pumax,Upper){
             }
         }
         if(flag===true){
-            actions.push({func:drawLine, params:[pumin,pk, "red","white"]});
+            actions.push({func:drawLine, params:[pumin,pk, "red","green"]});
         }
     }
     if(!(pumax.x === pm.x && pumax.y === pm.y)){
@@ -314,7 +306,7 @@ function UpperHull(pumin, pumax,Upper){
             }
         }
         if(flag === true){
-            actions.push({func:drawLine, params:[pumax , pm,"red","white"]});
+            actions.push({func:drawLine, params:[pumax , pm,"red","green"]});
         }
     }
     let Left = [];
@@ -429,7 +421,7 @@ function LowerHull(plmin, plmax,Lower){
             }
         }
         if(flag===true){
-            actions.push({func:drawLine, params:[{x:plmin.x, y: -plmin.y}, {x:pk.x, y:-pk.y}, "red","white"]});
+            actions.push({func:drawLine, params:[{x:plmin.x, y: -plmin.y}, {x:pk.x, y:-pk.y}, "red","green"]});
         }
     }
     if(!(plmax.x === pm.x && plmax.y === pm.y)){
@@ -444,7 +436,7 @@ function LowerHull(plmin, plmax,Lower){
             }
         }
         if(flag === true){
-            actions.push({func:drawLine, params:[{x:plmax.x, y: -plmax.y}, {x:pm.x, y:-pm.y},"red","white"]});
+            actions.push({func:drawLine, params:[{x:plmax.x, y: -plmax.y}, {x:pm.x, y:-pm.y},"red","green"]});
         }
     }
     let Left = [];
@@ -537,7 +529,7 @@ function upperBridge(S, a) {
     if (S.length === 2) {
         if (S[0].x < S[1].x) {
             if(S[0].y<0){
-                actions.push({func:drawLine, params:[S[0],S[1], "green","purple"]});
+                actions.push({func:drawLine, params:[S[0],S[1], "green","green"]});
             }else{
                 actions.push({func:drawLine, params:[{x:S[0].x, y: -S[0].y}, {x:S[1].x, y:-S[1].y},"green","purple"]});
             }
@@ -633,9 +625,9 @@ function upperBridge(S, a) {
 
  if (pk.x < a && pm.x >= a) {
     if(pk.y<0){
-        actions.push({func:drawLine, params:[pk,pm,"green","purple"]});
+        actions.push({func:drawLine, params:[pk,pm,"green","green"]});
     }else{
-        actions.push({func:drawLine, params:[{x:pk.x, y:-pk.y},{x:pm.x, y:-pm.y},"green","purple"]});
+        actions.push({func:drawLine, params:[{x:pk.x, y:-pk.y},{x:pm.x, y:-pm.y},"green","green"]});
     }
     return [ pk, pm ];
  }
@@ -674,24 +666,12 @@ document.getElementById('clear-btn').addEventListener('click',function(event){
 location.reload();
 });
 
-// document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
-//  window.location.href = "/convexhullvisualiser-master/convexhull.html"
-// });
-
 document.getElementById('start-btn').addEventListener('click', function(event) {
     controller.abort();
-    let UpperHullPoints = ConvexHull(points);
-    // for(let i =0;i<UpperHullPoints.length ;i++){
-    //     if(UpperHullPoints[i].y>0){
-    //         drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
-    //     }else{
-    //         drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
-    //     }
-    // }    
+    let UpperHullPoints = ConvexHull(points); 
 });
 
 document.getElementById('next').addEventListener('click',function(event){
-    // console.log(actions[count]);
     actions[count].func(...actions[count].params);
     count++;
 });
@@ -721,10 +701,6 @@ async function loadFile() {
                     points.push({x: parseFloat(x), y: parseFloat(y)});
                 }
                 for(let i=0;i<points.length;i++){
-                    // points[i].x= (points[i].x - minX)/(maxX-minX);
-                    // points[i].x = points[i].x*600 + 600;
-                    // points[i].y= (points[i].y - minY)/(maxY-minY);
-                    // points[i].y = points[i].y*500+ 80;
                     drawPoint(points[i].x,points[i].y, "white","9","0")
                 }
                 console.log(points);
