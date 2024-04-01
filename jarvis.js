@@ -244,6 +244,19 @@ document.getElementById('next').addEventListener('click',function(event){
     console.log("outside next");
 });
 
+document.getElementById('skip-3-step-btn').addEventListener('click',function(event){
+    // console.log(actions[count]);
+    // console.log("inside next");
+    // console.log(actions[count]);
+    actions[count].func(...actions[count].params);
+    count++;
+    actions[count].func(...actions[count].params);
+    count++;
+    actions[count].func(...actions[count].params);
+    count++;
+    // console.log("outside next");
+});
+
 document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
   
 });
