@@ -697,9 +697,9 @@ async function loadFile() {
                 console.log("hey");
                 for(let i=0;i<points.length;i++){
                     points[i].x= (points[i].x - minX)/(maxX-minX);
-                    points[i].x = points[i].x*600 + 1200;
+                    points[i].x = points[i].x*600 + 600;
                     points[i].y= (points[i].y - minY)/(maxY-minY);
-                    points[i].y = points[i].y*530+ 80;
+                    points[i].y = points[i].y*500+ 80;
                     drawPoint(points[i].x,points[i].y, "white","9","0")
                 }
                 console.log(points);
