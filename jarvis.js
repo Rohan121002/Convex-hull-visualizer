@@ -6,6 +6,7 @@ let lines = [];
 let actions = [];
 let medianLines = [];
 let toRemove = [];
+let already = new Set();
 
 const controller = new AbortController();
 const signal = controller.signal;
@@ -14,15 +15,15 @@ let rect_details = [];
 
 document.getElementById('pointsDiv').addEventListener('click', function(event) {
 let rect = event.target.getBoundingClientRect();
-//  rect_details.push(rect.x,rect.width, rect.y, rect.height);
 let x = event.clientX;
 let y = event.clientY;
 console.log(rect, x, y);
  points.push({ x: x, y: -y});
+//  console.log("this",x, y);
  drawPoint(x,y, "white","9","0");
 }, { signal });
 
-function drawLine(start, end, color,ptColor) {
+function drawLine(start, end, color) {
     let svg = document.getElementById('lineSVG');
     let newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     newLine.classList.add('line');
@@ -34,26 +35,26 @@ function drawLine(start, end, color,ptColor) {
     newLine.setAttribute('stroke', `${color}`);
     svg.appendChild(newLine);
     lines.push(newLine);
-    if(`${ptColor}`==="green"){
-        let pts = document.getElementsByClassName('vertex');
-        console.log(start, end);
-        console.log(pts);
-        for(let i =0;i<pts.length;i++){
-            if(pts[i].offsetLeft === start.x && pts[i].offsetTop === -start.y){
-                console.log("hey12");
-                document.getElementById('pointsDiv').removeChild(pts[i]);
-                drawPoint(start.x , -start.y, "green", "15","3.5");
-                console.log("hey again12");
-            }
-            if(pts[i].offsetLeft === end.x && pts[i].offsetTop === -end.y){
-                console.log("hey12");
-                document.getElementById('pointsDiv').removeChild(pts[i]);
-                drawPoint(end.x , -end.y, "green", "15","3.5");
-                console.log("hey again12");
-            }
-        }
-    }
-    console.log("hey again");
+    // if(`${ptColor}`==="green"){
+    //     let pts = document.getElementsByClassName('vertex');
+    //     console.log(start, end);
+    //     console.log(pts);
+    //     for(let i =0;i<pts.length;i++){
+    //         if(pts[i].offsetLeft === start.x && pts[i].offsetTop === -start.y){
+    //             console.log("hey12");
+    //             document.getElementById('pointsDiv').removeChild(pts[i]);
+    //             drawPoint(start.x , -start.y, "green", "15","3.5");
+    //             console.log("hey again12");
+    //         }
+    //         if(pts[i].offsetLeft === end.x && pts[i].offsetTop === -end.y){
+    //             console.log("hey12");
+    //             document.getElementById('pointsDiv').removeChild(pts[i]);
+    //             drawPoint(end.x , -end.y, "green", "15","3.5");
+    //             console.log("hey again12");
+    //         }
+    //     }
+    // }
+    // console.log("hey again");
 }
 
 function medianDrawLine(start, end) {
@@ -94,7 +95,6 @@ function removeLine(start,end){
     for(let i =0;i<lines.length;i++){
         if(Number(lines[i].attributes.x1.value)===start.x + 2.5 && Number(lines[i].attributes.y1.value)===-start.y + 2.5 &&
             Number(lines[i].attributes.x2.value)===end.x + 2.5 && Number(lines[i].attributes.y2.value)===-end.y + 2.5){
-            // console.log("i am inside");
             let svg = document.getElementById('lineSVG');
             svg.removeChild(lines[i]);
             break;
@@ -179,6 +179,7 @@ function removePoints(ptsToRemove){
             }
         }
     }
+    console.log("hemlo",rem)
     for(let i =0;i<rem.length;i++){
         document.getElementById('pointsDiv').removeChild(rem[i]);
     }
@@ -187,6 +188,8 @@ function removePoints(ptsToRemove){
 function distance(p1, p2){
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
   };
+
+
 function ConvexHull(points){
     if (points.length < 3) return [];
     let hull = [];
@@ -195,24 +198,35 @@ function ConvexHull(points){
     hull.push(leftMost);
     let currentPoint = leftMost;
     let nextPoint;
-
+    already.add(leftMost);
     do {
       nextPoint = points[0];
-
+      actions.push({func:drawPoint, params:[currentPoint.x, -currentPoint.y, "green","15","5"]});
       for (let i = 1; i < points.length; i++) {
         let crossProduct = (nextPoint.y - currentPoint.y) * (points[i].x - nextPoint.x) - (nextPoint.x - currentPoint.x) * (points[i].y - nextPoint.y);
+        if(!already.has(points[i])){
+            actions.push({func:drawLine, params:[currentPoint, points[i], "red"]});
+            actions.push({func:removeLine, params:[currentPoint, points[i]]});
+        }
         if (crossProduct < 0 || (crossProduct === 0 && distance(currentPoint, points[i]) > distance(currentPoint, nextPoint))) {
           nextPoint = points[i];
         }
       }
-
+      actions.push({func:drawLine, params:[currentPoint, nextPoint, "green"]});
       currentPoint = nextPoint;
       hull.push(currentPoint);
-    //   drawLine(hull[hull.length-1],hull[(hull.length+1)%hull.length],"red","white");
+      already.add(currentPoint);
     } while (nextPoint !== leftMost);
-    for(let i=0;i<hull.length;i++){
-        drawLine(hull[i],hull[(i+1)%hull.length],"red","white");
-    }
+    // let arr = [...already];
+    let brr = new Set(points);
+    let difference = new Set();
+    brr.forEach(function(element) {
+        if (!already.has(element)) {
+            difference.add(element);
+        }
+    });
+    let arr = [...difference];
+    actions.push({func:removePoints, params:[arr]});
     return hull;
 }
 
@@ -220,26 +234,14 @@ document.getElementById('clear-btn').addEventListener('click',function(event){
 location.reload();
 });
 
-// document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
-//  window.location.href = "/convexhullvisualiser-master/convexhull.html"
-// });
-
-document.getElementById('start-btn').addEventListener('click', function(event) {
-    controller.abort();
-    let UpperHullPoints = ConvexHull(points);
-    for(let i =0;i<UpperHullPoints.length ;i++){
-        if(UpperHullPoints[i].y>0){
-            drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
-        }else{
-            drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
-        }
-    }    
-});
 
 document.getElementById('next').addEventListener('click',function(event){
     // console.log(actions[count]);
+    console.log("inside next");
+    console.log(actions[count]);
     actions[count].func(...actions[count].params);
     count++;
+    console.log("outside next");
 });
 
 document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
@@ -264,19 +266,9 @@ async function loadFile() {
                     maxY = Math.max(y,maxY);
                     minX = Math.min(x,minX);
                     minY = Math.min(y,minY);
-                    points.push({x: parseFloat(x), y: parseFloat(y)});
+                    drawPoint(parseFloat(x),parseFloat(y), "white","9","0");
+                    points.push({x: parseFloat(x), y: -parseFloat(y)});
                 }
-                console.log("jhsa")
-                console.log(rect_details);
-                console.log("hey");
-                for(let i=0;i<points.length;i++){
-                    points[i].x= (points[i].x - minX)/(maxX-minX);
-                    points[i].x = points[i].x*600 + 600;
-                    points[i].y= (points[i].y - minY)/(maxY-minY);
-                    points[i].y = points[i].y*500+ 80;
-                    drawPoint(points[i].x,points[i].y, "white","9","0")
-                }
-                console.log(points);
                 resolve();
             };
 
@@ -288,23 +280,16 @@ async function loadFile() {
     fileInput.click();
     await fileInput.onchange();
     let UpperHullPoints = ConvexHull(points);
-
-    // console.log("sparsh",UpperHullPoints);
-    // for(let i =0;i<UpperHullPoints.length ;i++){
-    //     if(UpperHullPoints[i].y>0){
-    //         drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
-    //     }else{
-    //         drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
-    //     }
-    // }
 }
 
 document.getElementById('final-btn').addEventListener('click',function(event){
+    
     let UpperHullPoints = ConvexHull(points);
     for(let i =0;i<actions.length;i++){
         console.log(actions[i]);
         actions[i].func(...actions[i].params);
     }
+    
 });
 
 
@@ -320,3 +305,9 @@ document.getElementById('random-btn').addEventListener('click', async function(e
     console.log(points);
 });
 
+document.getElementById('start-btn').addEventListener('click', function(event) {
+    console.log("inside final");
+    controller.abort();
+    let UpperHullPoints = ConvexHull(points); 
+    console.log("outside final");
+});

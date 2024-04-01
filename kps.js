@@ -655,13 +655,13 @@ location.reload();
 document.getElementById('start-btn').addEventListener('click', function(event) {
     controller.abort();
     let UpperHullPoints = ConvexHull(points);
-    for(let i =0;i<UpperHullPoints.length ;i++){
-        if(UpperHullPoints[i].y>0){
-            drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
-        }else{
-            drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
-        }
-    }    
+    // for(let i =0;i<UpperHullPoints.length ;i++){
+    //     if(UpperHullPoints[i].y>0){
+    //         drawPoint(UpperHullPoints[i].x, UpperHullPoints[i].y, "green","15","5");
+    //     }else{
+    //         drawPoint(UpperHullPoints[i].x, -UpperHullPoints[i].y, "green","15","5");
+    //     }
+    // }    
 });
 
 document.getElementById('next').addEventListener('click',function(event){
@@ -694,14 +694,11 @@ async function loadFile() {
                     minY = Math.min(y,minY);
                     points.push({x: parseFloat(x), y: parseFloat(y)});
                 }
-                console.log("jhsa")
-                console.log(rect_details);
-                console.log("hey");
                 for(let i=0;i<points.length;i++){
-                    points[i].x= (points[i].x - minX)/(maxX-minX);
-                    points[i].x = points[i].x*600 + 600;
-                    points[i].y= (points[i].y - minY)/(maxY-minY);
-                    points[i].y = points[i].y*500+ 80;
+                    // points[i].x= (points[i].x - minX)/(maxX-minX);
+                    // points[i].x = points[i].x*600 + 600;
+                    // points[i].y= (points[i].y - minY)/(maxY-minY);
+                    // points[i].y = points[i].y*500+ 80;
                     drawPoint(points[i].x,points[i].y, "white","9","0")
                 }
                 console.log(points);
