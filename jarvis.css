@@ -1,0 +1,35 @@
+.btn {
+    background-color: #007bff; /* Default background color */
+    color: #fff; /* Default text color */
+    border: 1px solid #007bff; /* Default border */
+    padding: 10px 20px; /* Adjust padding as needed */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border 0.3s ease; /* Transition effect */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+    border: none; /* Remove border on hover */
+}
+.vertex{
+    position : absolute;
+    width : 15px;
+    height : 15px;
+    border-radius: 50%;
+}
+
+.aniLine{
+    stroke-dasharray: 450;
+    stroke-dashoffset: 450;
+    animation: draw 2s linear forwards;
+  }
+  
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  ::placeholder {
+    color: white;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="jarvis.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body style = "display:flex; background-color: black;">
+
+<div style="color: white; padding: 9%;">
+  <h2 style="font-size: 50px;color: #93d9ff; margin-bottom: 10%;">Kirkpatrick–Seidel algorithm</h2>
+  <p style="font-size: 17px; margin-bottom: 5%;">The traditional divide-and-conquer algorithm splits the input points into two equal parts, e.g., by a vertical line, recursively finds convex hulls for the left and right subsets of the input, and then merges the two hulls into one by finding the "bridge edges", bitangents that connect the two hulls from above and below.</p>
+  <div style="display: flex;margin-bottom: 5%;">
+    <button type="button" id="start-btn" class="btn" style="background-color:#855bff; width:200px;overflow:hidden; margin-right: 4%;" >Click here to visualize</button>
+    <button type="button" id="jb" class="btn" style="background-color:#855bff; width:200px;overflow:hidden; margin-right: 4%;" onclick="loadFile()">To get input from file</button>
+  </div>
+  <div style="margin-bottom: 5%;">
+    <button type="button" id="clear-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Clear all points</button>
+    <button type="button" id="go-jarvis-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Jarvis March Algorithm</button>
+  </div>
+  <div style="margin-bottom: 5%;">
+    <button type="button" id="final-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Get final convex hull</button>
+  </div>
+  <div>
+    <button type="button" id="random-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Get Random Points</button>
+    <input style="color: black;background-color: #855bff; height: 30px;border-radius: 5%;" type="number" id="numberInput" placeholder="Number of Points">
+  </div>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; margin-right: 3%;">
+  <h3 style="color: white; margin-bottom: 1%;">Click Here to add points</h3>
+  <div id="pointsDiv" style="border: white; background-color:#333d47;width: 800px; height: 670px; border: 3px solid black; display: flex; justify-content: center;">
+</div>
+<button type="button" id="next" class="btn" style="background-color:#855bff;width:300px;overflow: hidden;margin-right: 4%;" >Next Step</button>
+</div> 
+<svg id="lineSVG"style="width: 500px; height: 500px; position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible;">
+  <!-- <path class="aniLine" fill="none" stroke="#bc85ff" stroke-miterlimit="10" stroke-width="18" d="M14.2 65.54s36-36.79 56.31-35.66 38.6 27.31 58.13 26.56 26.34-5.91 37.6-13 30.53-19.52 39.48-19.14 19.48 8.23 31.12 19.87 18.91 13.2 25.25 13.16S278.24 58 297 40.76s25.86-17.86 31.49-17.86 48.11 15.42 65 13.27" > -->
+</svg> 
+<script src="jarvis.js"></script>
+</body>
+</html>
