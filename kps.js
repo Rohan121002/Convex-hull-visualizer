@@ -676,6 +676,15 @@ document.getElementById('next').addEventListener('click',function(event){
     count++;
 });
 
+document.getElementById('skip-3-step-btn').addEventListener('click',function(event){
+    actions[count].func(...actions[count].params);
+    count++;
+    actions[count].func(...actions[count].params);
+    count++;
+    actions[count].func(...actions[count].params);
+    count++;
+});
+
 document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
   
 });

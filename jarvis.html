@@ -12,7 +12,7 @@
 
 <div style="color: white; padding: 9%;">
   <h2 style="font-size: 50px;color: #93d9ff; margin-bottom: 10%;">Jarvis March algorithm</h2>
-  <p style="font-size: 17px; margin-bottom: 5%;">The traditional divide-and-conquer algorithm splits the input points into two equal parts, e.g., by a vertical line, recursively finds convex hulls for the left and right subsets of the input, and then merges the two hulls into one by finding the "bridge edges", bitangents that connect the two hulls from above and below.</p>
+  <p style="font-size: 17px; margin-bottom: 5%;">The Jarvis March algorithm, also known as the Gift Wrapping algorithm, is a method to find the convex hull of a set of points. It starts from the leftmost point and wraps the points in a counterclockwise direction, similar to wrapping a gift.</p>
   <div style="display: flex;margin-bottom: 5%;">
     <button type="button" id="start-btn" class="btn" style="background-color:#855bff; width:200px;overflow:hidden; margin-right: 4%;" >Click here to visualize</button>
     <button type="button" id="jb" class="btn" style="background-color:#855bff; width:200px;overflow:hidden; margin-right: 4%;" onclick="loadFile()">To get input from file</button>
@@ -23,8 +23,13 @@
   </div>
   <div style="margin-bottom: 5%;">
     <button type="button" id="final-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Get final convex hull</button>
+    <button type="button" id="skip-3-step-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Skip 3 steps</button>
+
   </div>
   <div>
+    <button type="button" id="skip-3-step-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Previous Step</button>
+  </div>
+  <div  style="margin-bottom: 5%;">
     <button type="button" id="random-btn" class="btn" style="background-color:#855bff;width: 200px;overflow: hidden;margin-right: 4%;" >Get Random Points</button>
     <input style="color: black;background-color: #855bff; height: 30px;border-radius: 5%;" type="number" id="numberInput" placeholder="Number of Points">
   </div>
