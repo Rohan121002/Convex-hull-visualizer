@@ -36,24 +36,24 @@ function drawLine(start, end, color,ptColor) {
     lines.push(newLine);
     if(`${ptColor}`==="green"){
         let pts = document.getElementsByClassName('vertex');
-        console.log(start, end);
-        console.log(pts);
+        // console.log(start, end);
+        // console.log(pts);
         for(let i =0;i<pts.length;i++){
             if(pts[i].offsetLeft === start.x && pts[i].offsetTop === -start.y){
-                console.log("hey12");
+                // console.log("hey12");
                 document.getElementById('pointsDiv').removeChild(pts[i]);
                 drawPoint(start.x , -start.y, "green", "15","3.5");
-                console.log("hey again12");
+                // console.log("hey again12");
             }
             if(pts[i].offsetLeft === end.x && pts[i].offsetTop === -end.y){
-                console.log("hey12");
+                // console.log("hey12");
                 document.getElementById('pointsDiv').removeChild(pts[i]);
                 drawPoint(end.x , -end.y, "green", "15","3.5");
-                console.log("hey again12");
+                // console.log("hey again12");
             }
         }
     }
-    console.log("hey again");
+    // console.log("hey again");
 }
 
 function medianDrawLine(start, end) {
@@ -194,7 +194,7 @@ function ConvexHull(points){
     points.sort((a,b)=> a.x-b.x || a.y - b.y);
     console.log("sorted", points);
     let {pumax, pumin, plmax, plmin} = findminmax(points);
-    actions.push({func: drawLine, params: [pumin, pumax, "red","green"]});
+    actions.push({func: drawLine, params: [pumin, pumax, "red","purple"]});
     plmin = {x:plmin.x , y:-plmin.y};
     plmax = {x:plmax.x , y:-plmax.y};
     let Upper = [];
@@ -230,12 +230,38 @@ function ConvexHull(points){
         actions.push({func:getLowerAgain , params:[Lower]});
     }
     let LowerAns = LowerHull(plmin,plmax,Lower);
-    if(!(plmin.x===pumin.x && plmin.y === -pumin.y)){
-        actions.push({func:drawLine, params:[pumin , plmin,"green","green"]});
+    // if(plmin.x===pumin.x && plmin.y===pumin.y){
+
+    // }
+    // else if((plmin.x===pumin.x)){
+    //     pumin = {x:pumin.x , y:-pumin.y};
+    //     console.log(plmin, pumin);
+    //     console.log("12e31231098");
+    //     actions.push({func:drawLine, params:[pumin , plmin,"green","purple"]});
+    // }
+    // if(plmax.x===pumax.x && plmax.y===pumax.y){
+
+    // }
+    // else if((plmax.x===pumax.x)){
+    //     pumax = {x:pumax.x , y:-pumax.y};
+    //     console.log(plmax, pumax);
+    //     console.log("12e31231098");
+    //     actions.push({func:drawLine, params:[pumax , plmax, "green","purple"]});
+    // }
+    if(plmax.y>0){
+        plmax = {x:plmax.x , y:-plmax.y};
     }
-    if(!(plmax.x===pumax.x && plmax.y === -pumax.y)){
-        actions.push({func:drawLine, params:[pumax , plmax, "green","green"]});
+    if(plmin.y>0){
+        plmin = {x:plmin.x , y:-plmin.y};
     }
+    if(pumax.y>0){
+        pumax = {x:pumax.x , y:-pumax.y};
+    }
+    if(pumin.y>0){
+        pumin = {x:pumin.x , y:-pumin.y};
+    }   
+    actions.push({func:drawLine, params:[pumax , plmax, "green","gray"]});
+    actions.push({func:drawLine, params:[plmin , pumin, "green","gray"]});
 }
 
 
@@ -511,16 +537,16 @@ function upperBridge(S, a) {
     if (S.length === 2) {
         if (S[0].x < S[1].x) {
             if(S[0].y<0){
-                actions.push({func:drawLine, params:[S[0],S[1], "green","green"]});
+                actions.push({func:drawLine, params:[S[0],S[1], "green","purple"]});
             }else{
-                actions.push({func:drawLine, params:[{x:S[0].x, y: -S[0].y}, {x:S[1].x, y:-S[1].y},"green","green"]});
+                actions.push({func:drawLine, params:[{x:S[0].x, y: -S[0].y}, {x:S[1].x, y:-S[1].y},"green","purple"]});
             }
             return [ S[0], S[1] ];
         } else {
             if(S[0].y<0){
-                actions.push({func:drawLine, params:[S[0],S[1],"green","green"]});
+                actions.push({func:drawLine, params:[S[0],S[1],"green","purple"]});
             }else{
-                actions.push({func:drawLine, params:[{x:S[0].x, y: -S[0].y}, {x:S[1].x, y:-S[1].y},"green","green"]});
+                actions.push({func:drawLine, params:[{x:S[0].x, y: -S[0].y}, {x:S[1].x, y:-S[1].y},"green","purple"]});
             }
             return [ S[1], S[0] ];
         }
@@ -607,9 +633,9 @@ function upperBridge(S, a) {
 
  if (pk.x < a && pm.x >= a) {
     if(pk.y<0){
-        actions.push({func:drawLine, params:[pk,pm,"green","green"]});
+        actions.push({func:drawLine, params:[pk,pm,"green","purple"]});
     }else{
-        actions.push({func:drawLine, params:[{x:pk.x, y:-pk.y},{x:pm.x, y:-pm.y},"green","green"]});
+        actions.push({func:drawLine, params:[{x:pk.x, y:-pk.y},{x:pm.x, y:-pm.y},"green","purple"]});
     }
     return [ pk, pm ];
  }
