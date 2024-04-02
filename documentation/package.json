@@ -1,0 +1,15 @@
+{
+  "name": "documentation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "kps.js",
+  "scripts": {
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jsdoc": "^4.0.2"
+  }
+}
