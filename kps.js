@@ -1,3 +1,8 @@
+// Sparsh Khandelwal 2021A7PS1320H
+// Rohan Chavan 2021A7PS2739H
+// Mihir Kulkarni 2021A7PS2689H
+// Anmol Agarwal 2021A7PS0136H
+// Rohit Das 2021A7PS2860H
 let points = [];
 let count = 0;
 let currentPointIndex = 0;
@@ -187,6 +192,22 @@ function getLowerAgain(Lower){
     for(let i=0;i<Lower.length;i++){
         drawPoint(Lower[i].x,Lower[i].y, "white","9","0");
     }
+}
+
+function medianOfMedians(arr, k) {
+    if (arr.length === 1) return arr[0];
+    let medians = [];
+    for (let i = 0; i < arr.length; i += 5) {
+        let subList = arr.slice(i, i + 5);
+        medians.push(subList.sort((a, b) => a - b)[Math.floor(subList.length / 2)]);
+    }
+    let pivot = medianOfMedians(medians, Math.floor(medians.length / 2));
+    let lows = arr.filter(a => a < pivot);
+    let highs = arr.filter(a => a > pivot);
+    let pivots = arr.filter(a => a === pivot);
+    if (k < lows.length) return medianOfMedians(lows, k);
+    else if (k < lows.length + pivots.length) return pivots[0];
+    else return medianOfMedians(highs, k - lows.length - pivots.length);
 }
 
 function ConvexHull(points){
@@ -708,10 +729,6 @@ document.getElementById('prev-btn').addEventListener('click',function(event){
     }
 });
 
-document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
-  
-});
-
 async function loadFile() {
     controller.abort();
     const fileInput = document.createElement('input');
@@ -730,10 +747,10 @@ async function loadFile() {
                     maxY = Math.max(y,maxY);
                     minX = Math.min(x,minX);
                     minY = Math.min(y,minY);
-                    points.push({x: parseFloat(x), y: parseFloat(y)});
-                }
-                for(let i=0;i<points.length;i++){
-                    drawPoint(points[i].x,points[i].y, "white","9","0")
+                    points.push({x: parseFloat(x)+860, y: -parseFloat(y)-70});
+
+                    drawPoint(parseFloat(x)+860,parseFloat(y)+70, "white","9","0");
+
                 }
                 console.log(points);
                 resolve();
@@ -764,6 +781,7 @@ document.getElementById('final-btn').addEventListener('click',function(event){
         console.log(actions[i]);
         actions[i].func(...actions[i].params);
     }
+    count = actions.length;
 });
 
 

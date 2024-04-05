@@ -1,3 +1,8 @@
+// Sparsh Khandelwal 2021A7PS1320H
+// Rohan Chavan 2021A7PS2739H
+// Mihir Kulkarni 2021A7PS2689H
+// Anmol Agarwal 2021A7PS0136H
+// Rohit Das 2021A7PS2860H
 let points = [];
 let count = 0;
 let currentPointIndex = 0;
@@ -168,6 +173,8 @@ function removeLowerPoints(Lower, plmin, plmax){
 }
 
 function removePoints(ptsToRemove){
+    // console.log("Problem",ptsToRemove);
+    
     let pts = document.getElementsByClassName('vertex');
     let rem=[];
     for(let i =0;i<pts.length;i++){
@@ -279,9 +286,6 @@ document.getElementById('prev-btn').addEventListener('click',function(event){
     }
 });
 
-document.getElementById('go-jarvis-btn').addEventListener('click',function(event){
-  
-});
 
 async function loadFile() {
     controller.abort();
@@ -301,8 +305,8 @@ async function loadFile() {
                     maxY = Math.max(y,maxY);
                     minX = Math.min(x,minX);
                     minY = Math.min(y,minY);
-                    drawPoint(parseFloat(x),parseFloat(y), "white","9","0");
-                    points.push({x: parseFloat(x), y: -parseFloat(y)});
+                    points.push({x: parseFloat(x)+860, y: -parseFloat(y)-70});
+                    drawPoint(parseFloat(x)+860,parseFloat(y)+70, "white","9","0");
                 }
                 resolve();
             };
@@ -324,6 +328,7 @@ document.getElementById('final-btn').addEventListener('click',function(event){
         console.log(actions[i]);
         actions[i].func(...actions[i].params);
     }
+    count = actions.length;
     
 });
 

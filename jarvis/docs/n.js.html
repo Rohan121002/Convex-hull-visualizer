@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: n.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: n.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Defines the line style for a candidate line.
+ * @typedef {Object} CandidateLineStyle
+ * @property {string} color - The color of the line.
+ * @property {number} width - The width of the line.
+ * @property {string} dash - The dash style of the line.
+ * @property {string} name - The name of the line style.
+ */
+
+/**
+ * Defines the line style for a test line.
+ * @typedef {Object} TestLineStyle
+ * @property {string} color - The color of the line.
+ * @property {number} width - The width of the line.
+ * @property {string} dash - The dash style of the line.
+ * @property {string} name - The name of the line style.
+ */
+
+/**
+ * Represents a point with coordinates [x, y].
+ * @typedef {number[]} Point
+ */
+
+/**
+ * Represents a line segment with points and style.
+ * @typedef {Object} LineSegment
+ * @property {Point[]} points - The points defining the line segment.
+ * @property {CandidateLineStyle|TestLineStyle} style - The style of the line segment.
+ */
+
+/**
+ * Represents a state in the Giftwrap convex hull algorithm.
+ * @typedef {Object} HullState
+ * @property {LineSegment[]} lines - List of line segments in the state.
+ * @property {Point[]} hull - List of points forming the convex hull.
+ */
+
+/**
+ *  Return a sequence of states to visualise the progress of the
+ * Giftwrap convex hull algorithm. State0 represents the starting state
+ * and the last state represents the final convex hull state.
+ * Each state is an object with lines and hull attributes. The lines
+ * attribute is a list of line objects, each having a points attribute
+ *(a list of 2 or more points, each a 2-element [x, y] array) and a
+ *style attribute containing Plotly trace attributes.
+ * @param {Array&lt;number>} points -x and y coordinates of Points of the plane on which convex hull has to be found
+ * 
+ */
+function giftWrap(points) {
+
+    const CANDIDATE_LINE_STYLE = {color: 'red', width: 2, dash: 'dash', name: 'Candidate'};
+  const TEST_LINE_STYLE = {color: 'blue', width: 2, dash: 'dot', name: 'Probe'};
+    var p, pointOnHull, candidate, bottommost = points[0], hull = [], i, j, states = [];
+
+    function pushState(linelist) {
+        states.push({lines: linelist, hull: hull.slice()});
+    }
+
+    if (points.length &lt; 2) {
+        return [];
+    }
+    for (i = 1; i &lt; points.length; i++) {
+        p = points[i];
+        if (p[1] &lt; bottommost[1] || (p[1] === bottommost[1] &amp;&amp; p[0] &lt; bottommost[0])) {
+            bottommost = p;
+        }
+    }
+
+    hull = [];
+    pointOnHull = bottommost;
+
+    while (hull.length &lt; 2 || (hull[0] !== pointOnHull)) {
+        hull.push(pointOnHull);
+        pushState({points:[], style:{}});
+        candidate = null;
+
+        for (j = 0; j &lt; points.length; j++) {
+            p = points[j];
+            if (p === pointOnHull || p === candidate) continue;
+            if (candidate === null) {
+                candidate = p;
+                pushState([{points: [pointOnHull, candidate], style: CANDIDATE_LINE_STYLE}]);
+                continue;
+            }
+            pushState([
+                {points: [pointOnHull, candidate], style: CANDIDATE_LINE_STYLE},
+                {points: [pointOnHull, p], style: TEST_LINE_STYLE}]);
+            if (geom.isCcwA(pointOnHull, p, candidate)) {
+                candidate = p;
+                pushState([{points: [pointOnHull, candidate], style: CANDIDATE_LINE_STYLE}]);
+            }
+        }
+        pointOnHull = candidate;
+    }
+    hull.push(pointOnHull);  // Close the loop
+    pushState([]);
+    //hull.pop();
+    return states;
+}
+
+return giftWrap;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ConvexHull">ConvexHull</a></li><li><a href="global.html#LowerHull">LowerHull</a></li><li><a href="global.html#UpperHull">UpperHull</a></li><li><a href="global.html#drawLine">drawLine</a></li><li><a href="global.html#drawPoint">drawPoint</a></li><li><a href="global.html#findminmax">findminmax</a></li><li><a href="global.html#getLowerAgain">getLowerAgain</a></li><li><a href="global.html#giftWrap">giftWrap</a></li><li><a href="global.html#keepUniqueElements">keepUniqueElements</a></li><li><a href="global.html#medianDrawLine">medianDrawLine</a></li><li><a href="global.html#removeLine">removeLine</a></li><li><a href="global.html#removeLowerPoints">removeLowerPoints</a></li><li><a href="global.html#removeMedianLine">removeMedianLine</a></li><li><a href="global.html#removePoints">removePoints</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 01 2024 22:39:58 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
