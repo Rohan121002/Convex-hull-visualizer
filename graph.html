@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Images Side by Side with Space</title>
+<style>
+    body {
+        background-color: black;
+        color: white; /* Set text color to white for better readability */
+        font-family: Arial, sans-serif; /* Optional: Set font-family */
+    }
+    .image-container {
+        display: flex;
+        justify-content: center;
+        gap: 50px; /* Adjust this value to change the space between images */
+    }
+    .image-container img {
+        width: 600px;
+        height: 500px;
+        border: 2px solid white; /* Border style: 2px width, solid, white color */
+        border-radius: 8px;
+    }
+    .image-container figcaption {
+        font-size: 34px;
+        font-style: italic;
+        text-align: center; /* Centers the caption text */
+    }
+</style>
+</head>
+<body>
+
+<h2>Time(ms) vs n curve</h2>
+
+<div class="image-container">
+    <fig>
+    <img src="jarvis.png" alt="Image 1">
+    <figcaption>Jarvis March</figcaption>
+</fig>
+<fig>
+    <img src="KPS.png" alt="Image 2">
+    <figcaption>KPS</figcaption>
+</fig>
+</div>
+
+</body>
+</html>
